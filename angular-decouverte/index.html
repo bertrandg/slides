@@ -40,6 +40,158 @@
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
+				
+				<section>
+					<h1>Plan des 4 jours</h1>
+					<ul>
+						<li>
+							<h2>Jour 1</h2>
+							<ul>
+								<li>Présentation du framework</li>
+								<li>Découverte des principales directive</li>
+							</ul>
+						</li>
+						<li class="fragment">
+							<h2>Jour 2</h2>
+							<ul>
+								<li>Sous le capot</li>
+								<li>$digest cycle et dirty checking</li>
+								<li>les directives en profondeur</li>
+								<li>création directives custom</li>
+							</ul>
+						</li>
+						<li class="fragment">
+							<h2>Jour 3</h2>
+							<ul>
+								<li>Les principales librairies AngularJS</li>
+								<li>Utilisation tâches Grunt</li>
+								<li></li>
+							</ul>
+						</li>
+						<li class="fragment">
+							<h2>Jour 4</h2>
+							<ul>
+								<li>Exercices conditions réelles</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				
+				
+				<section>
+					<h1>Courbe d'apprentissage</h1>
+					<img data-src="images/feelings_about_angularjs_over_time.png" />
+					<p><a href="http://www.bennadel.com" target="_blank">bennadel.com</a></p>
+				</section>
+				
+				
+				<section>
+					<h1>Un framework complet pour SPA</h1>
+					<ul>
+						<li>Binding unidirectionnel et bidirectionnel</li>
+						<li>Routing</li>
+						<li>Injection de dépendances</li>
+						
+						<li>DOM Templating</li>
+						<li>Dependency Injection</li>
+						<li>Two Way Databinding</li>
+						<li>Directives</li>
+						<li>History Managment</li>
+						<li>Dirty Checking</li>
+						<li>Filtres</li>
+						<li>REST Resources</li>
+						<li>Scope Inheritance</li>
+						<li>Unit Testing</li>
+						<li>End to End Tests</li>
+						<li>Karma</li>
+					</ul>
+				</section>
+				
+				<section>
+					<h1>Déclaratif plutôt qu’impératif</h1>
+					<p class="fragment">Avec backbone = impératif, le js commande l'html</p>
+					<p class="fragment">Avec angular = déclaratif, le html commande le js</p>
+					
+					<p class="fragment">impératif = difficile à organiser et maintenir</p>
+					<p class="fragment">déclaratif = plus simple à lire et moins de code</p>
+				</section>
+				
+				<section>
+					<h1>Etendre le language HTML</h1>
+					<p class="fragment">Utilisation de nouvelles balises et attributs HTML</p>
+					<p class="fragment">Angular parse le DOM et interpréte ces éléments</p>
+					<p class="fragment">Pas de syntaxe de template spéciale, c'est du HTML!</p>
+				</section>
+				
+				<section>
+					<h1>The Angular Way, oubliez jQuery</h1>
+					<p class="fragment">Manières de penser opposées</p>
+					<p class="fragment">Risque de conflit entre 2 approches</p>
+					<p class="fragment">Necessite un temps d'adaptation</p>
+				</section>
+				
+				<section>
+					<h1>C'est quoi une application AngularJS ?</h1>
+					<p>Une partie du DOM sur laquelle on a mis l'attribut 'ng-app'</p>
+					
+					<code>
+						<div ng-app="testApp">..</div>
+					</code>
+					<p>Possibilité de mettre plusieurs applications sur la même page</p>
+					<p>Le framework parse la partie du DOM et lorsqu'il trouve des directives, il </p>
+				</section>
+				
+				
+				<section>								## voir images http://swiip.github.io/yeoman-angular/slides/#/12
+					<h1>Un framework MVC</h1>
+					
+					<p>Le controller décrit un modèle sous la forme d'un objet simple qu'il assigne au scope</p>
+					<p>La vue utilise des directives (déclaratif) pour se liée au controller et le modèle</p>
+				</section>
+				
+				<section>
+					<h1>Les services</h1>
+					
+				</section>
+				
+				<section>
+					<h1>Les promesses</h1>
+					<p>Utilisation du service $q</p>
+				</section>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<section>
+					<h1>Les scopes</h1>
+					
+				</section>
+				
+				
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 				<section>
 					<h1>Reveal.js</h1>
 					<h3>The HTML Presentation Framework</h3>
@@ -384,6 +536,9 @@ Reveal.addEventListener( 'customevent', function() {
 			// Full list of configuration options available at:
 			// https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
+			    width: 1200,
+			    height: 900,
+			    
 				controls: true,
 				progress: true,
 				history: true,
