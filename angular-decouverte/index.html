@@ -50,13 +50,55 @@
                 
                 
                 <section>
-                    <h1>Déclaratif plutôt qu’impératif</h1>
-                    <p class="fragment">Avec backbone = impératif, le js commande l'html</p>
-                    <p class="fragment">Avec angular = déclaratif, le html commande le js</p>
-                    
-                    <p class="fragment">impératif = difficile à organiser et maintenir</p>
-                    <p class="fragment">déclaratif = plus simple à lire et moins de code</p>
+	                <section>
+	                    <h1>Déclaratif plutôt qu’impératif</h1>
+	                    <p class="fragment">Avec backbone = impératif, le js commande l'html</p>
+	                    <p class="fragment">Avec angular = déclaratif, le html commande le js</p>
+	                    
+	                    <p class="fragment">impératif = difficile à organiser et maintenir</p>
+	                    <p class="fragment">déclaratif = plus simple à lire et moins de code</p>
+	                </section>
+	                
+	                <section>
+	                    <p>Plus besoin d' #id et .class de partout</p>
+	                    
+	                    <pre><code>
+<ul id="myTab" class="nav nav-tabs" role="tablist">
+  <li class="active">
+  	<a id="home-tab">Home</a>
+  </li>
+  <li class="">
+  	<a id="profile-tab" >Profile</a>
+  </li>
+</ul>
+
+<div id="myTabContent" class="tab-content">
+  <div id="home">
+    <p>Raw denim you voluptate nisi qui.</p>
+  </div>
+  <div id="profile">
+    <p>Food truck jean stumptown echo park.</p>
+  </div>
+</div>
+	                    </code></pre>
+	                    
+	                    <code><pre>
+$('#myTab a').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
+	                    </code></pre>
+	                </section>
+	                
+	                <section>
+	                    <h1>Plus maintenable</h1>
+	                    <h2>Quand vous devez modifier l'UI:</h2>
+	                    <p>pas besoin de modifier le JS, bougez simplement les directives</p>
+	                    <p>CSS et JS vraiment séparés, aucun risque de casser l'un ou l'autre lors de changement de .class ou #id	</p>
+	                </section>
                 </section>
+                
+                
                 
                 <section>
                     <h1>Etendre le language HTML</h1>
@@ -146,7 +188,7 @@
                     <h1>Les filtres</h1>
                     
                     <p>similaires à Twig</p>
-                    <p>stateless = si la données a transformées ne change pas, le filtre ne sera pas réexeutée</p>
+                    <p>stateless = si la données à transformer ne change pas, le filtre ne sera pas réexeutée</p>
                     <p>Utilisé dans les templates ou bien en JS:</p>
                     <p>exemple date, uppercase, json</p>
                 </section>
@@ -170,7 +212,7 @@
                     <p>Le scope est la glue entre controlleur et vue</p>
                     <p>Le scope est un simple objet JS sur lequel on fait des bindings dans la vue</p>
                     <p>Imbrication des controlleurs/scopes</p>
-                    <p>Pour chaque ngApp, un </p>
+                    <p>Pour chaque ngApp, un $rootScope est créé, puis chaque controller en cré un descendant, ce qui créé une arborescence</p>
                     
                     # démo plunker
                 </section>
@@ -180,6 +222,10 @@
                     <h1>Les tests</h1>
                     
                     <p>Conçu pour pouvoir tester facilement</p>
+                    
+                    <p>Tests unitaires: Karma (Application NodeJS pour faire tourner les tests) + Jasmine (Framework pour écrire les tests) + ngMock (module pour faire des mocks)</p>
+                    
+                    <p>Tests E2E (End to End): Protractor</p>
                 </section>
                 
                 
@@ -189,17 +235,35 @@
                     
                     <p>module ngRoute trés basique, pas de vue imbriquées..</p>
                     <p>ui-router, lib remplaçante trés poussée</p>
+                    <p>AngularJS 1.4 pour trés bientôt avec un nouveau router</p>
                 </section>
                 
                 
                 <section>
-                    <h1>Les formulaires</h1>
+                    <h1>Les formulaires</h1> 
                     
-                    <p>Conçu pour CRUD donc formulaires obligatoire</p>
+                    <p>Conçu pour CRUD donc gestion formulaires obligatoire</p>
                     <p>Details et démo ng-model, ngModelOptions et ngMessage</p>
                 </section>
                 
                 
+                
+                <section>
+                    <h1>Les animations</h1> 
+                    
+                    <p>Découplées et réutilisables</p>
+                    <p>Animations CSS et JS supportées</p>
+                    
+                    <p>Ajout module ngAnimate</p>
+                    <p>Ajoute des classes</p>
+                    
+                    
+                    <p>Exemple</p>
+                    <p>Animation CSS fait main</p>
+                    <p>Animation CSS avec Animate.css</p>
+                    <p>Animation JS avec GreenSock</p>
+                    
+                </section>
                 
                 
                 
