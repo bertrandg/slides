@@ -35,234 +35,681 @@
     </head>
 
     <body>
+        <style>
+        .reveal pre code {
+            //max-height: 500px;
+        }
+        .reveal blockquote {
+            width: 90%;
+        }
+        .reveal pre {
+            font-size: .45em;
+        }
+        .reveal p > code,
+        .reveal blockquote > code,
+        .reveal li > code {
+            color: #8b743d;
+        }
+        </style>
+    
 
         <div class="reveal">
 
             <!-- Any section element inside of this container is displayed as a slide -->
             <div class="slides">
                 
-              	<section>
+                  <section>
                     <h1>Formation AngularJS</h1>
                     <h2>Découverte du framework</h2>
                     <small><a href="http://bertrandg.github.io/">Bertrand GAILLARD</a></small>
-              	</section>
+                  </section>
                 
                 
                 
                 <section>
-	                <section>
-	                    <h1>Déclaratif plutôt qu’impératif</h1>
-	                    <p class="fragment">Avec backbone = impératif, le js commande l'html</p>
-	                    <p class="fragment">Avec angular = déclaratif, le html commande le js</p>
-	                    
-	                    <p class="fragment">impératif = difficile à organiser et maintenir</p>
-	                    <p class="fragment">déclaratif = plus simple à lire et moins de code</p>
-	                </section>
-	                
-	                <section>
-	                    <p>Plus besoin d' #id et .class de partout</p>
-	                    
-	                    <pre><code>
-<ul id="myTab" class="nav nav-tabs" role="tablist">
-  <li class="active">
-  	<a id="home-tab">Home</a>
-  </li>
-  <li class="">
-  	<a id="profile-tab" >Profile</a>
-  </li>
-</ul>
+                    <section>
+                        <h1>Déclaratif plutôt qu’impératif</h1>
+                    </section>
+                    
+                    <section>
+                        <p>BackboneJS = impératif, le JS commande l'HTML</p>
+                        <p class="fragment">AngularJS = déclaratif, le HTML commande le JS</p>
+                        <br>
+                        <p class="fragment">impératif = difficile à organiser et maintenir</p>
+                        <p class="fragment">déclaratif = plus simple à lire et moins de code</p>
+                    </section>
+                    
+                    <section>
+                        <h2>Plus maintenable</h2>
+                        <ul>
+                            <li>
+                                <p><code>#id</code> et <code>.class</code> ne sont plus utilisés dans le JS.</p>
+                                <p>Dans le code HTML, on a:</p>
+                                <ul>
+                                    <li class="fragment">Pour le CSS, on a les <code>#id</code> et <code>.class</code></li>
+                                    <li class="fragment">Pour le JS, on a les directives Angular ou personnalisées</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="fragment">CSS et JS ne sont plus liés du tout.</p>
+                                <p class="fragment">Aucun/moins de risque d'erreur de:</p>
+                                <ul>
+                                    <li class="fragment">Casser des sélécteurs JS en travaillant sur le style</li>
+                                    <li class="fragment">Casser des sélécteurs CSS en travaillant sur le javascript</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </section>
+                </section>
+                
+                
+                
+                <section>
+                    <section>
+                        <h1>Etendre le language HTML</h1>
+                    </section>
+                    
+                    <section>
+                    	<ul>
+	                        <li>Utilisation de nouvelles balises et attributs HTML</li>
+	                        <li class="fragment">Angular parse le DOM et interpréte ces éléments</li>
+	                        <li class="fragment">Pas de syntaxe de template spéciale, c'est du HTML!</li>
+                    	</ul>
+                    </section>
+                </section>
+                
+                
+                <section>
+                    <section>
+                        <h1>C'est quoi une application AngularJS?</h1>
+                    </section>
+                    
+                    <section>
+                        <ul>
+                            <li>
+                                <p>Une partie du DOM sur laquelle on a mis l'attribut <code>ng-app</code>:</p>
+<pre><code><div ng-app="testApp">..</div></code></pre>
+                            </li>
+                            <li class="fragment">
+                                <p>Autre moyen de démarrer une application en passant par javascript:</p>
+<pre><code><div id="divApp">..</div></code></pre>
+<pre><code>angular.bootstrap(document.getElementById('divApp'), ['testApp']);</code></pre>
+                            </li>
+                            <li class="fragment">
+                                <p>Possibilité de mettre plusieurs applications sur la même page.</p>
+                            </li>
+                            <li class="fragment">
+                                <p>Parse la partie du DOM et exécute les directives qu'il trouve en ajoutant des templates, exécutant du JS,..</p>
+                            </li>
+                        </ul>
+                    </section>
+                    
+                </section>
+                
+                
+                <section>
+                    <section>
+                        <h1>Un framework MVC</h1>
+                    </section>
+                    
+                    <section>
+                        <img data-src="images/mvc.png"/>
+                        <a href="http://swiip.github.io/yeoman-angular" target="_blank">http://swiip.github.io</a>
+                    </section>
+                    
+                    <section>
+                        <h2>Les controlleurs et les scopes</h2>
+                        
+                        <ul>
+                            <li>Toujours liés entre eux.</li>
+                            <li>Le scope est la glue entre controlleur et vue.</li>
+                            <li>Le scope est un simple objet JS sur lequel on fait des bindings dans la vue.</li>
+                            <li>Imbrication des <code>controlleurs</code>/<code>scopes</code>.</li>
+                            <li>Pour chaque <code>ngApp</code>, un <code>$rootScope</code> est créé, puis chaque controlleur crée un descendant, ce qui créé une arborescence.</li>
+                        </ul>
+                    </section>
+                </section>
+                
+                
+                <section>
+                    <section>
+                        <h1>Les directives</h1>
+                    </section>
+                    
+                    <section>
+                        <ul>
+                            <li>Permet d'étendre le language HTML.</li>
+                            <li>Permet d'encapsuler du JS et de l'HTML dans une "boite noire".</li>
+                            <li>Va dans le sens des futurs standards du web (WebComponents, Polymer).</li>
+                            <li>Génial pour la réutilisation, le partage, le travail en équipe, les tests,..</li>
+                            <li>Une des parties les plus puissantes mais aussi difficiles.</li>
+                        </ul>
+                    </section>
+                    
+                    <section>
+                        <h2>Directives peuvent prendre 4 formes:</h2>
+                        <ul>
+                            <li>
+                                Elément/Tag
+                                <pre><code><my-directive></my-directive></code></pre>
+                            </li>
+                            <li>
+                                Attribut
+                                <pre><code><span my-directive></span></code></pre>
+                            </li>
+                            <li>
+                                Commentaire
+                                <pre><code><!-- directive: my-directive --></code></pre>
+                            </li>
+                            <li>
+                                Classe
+                                <pre><code><span class="my-directive"></span></code></pre>
+                            </li>
+                        </ul>
+                    </section>
+                        
+                    <section>
+                        <ul>
+                            <li>directives natives commencent par ng- (conventions)</li>
+                            <li>bien de mettre son prefix (conventions)</li>
+                            <li>avec des tirets dans l'HTML (ng-click) et en camelCase en JS (ngClick)</li>
+                            <li>possibilité de écrire sous différentes formes dans l'HTML:</li>
+                        </ul>
+                        
+                        <pre><code>
+<span ng-bind="name"></span>
+<span ng:bind="name"></span>
+<span ng_bind="name"></span>
+<span data-ng-bind="name"></span>
+<span x-ng-bind="name"></span>
+                        </code></pre>
+                    </section>
+                        
+                    <section>
+                        <h2>Directives simples:</h2>
+                        <ul>
+                            <li>ng-bind / {{ }}</li>
+                            <li>ng-click</li>
+                            <li>ng-class</li>
+                            <li>ng-show / ng-hide</li>
+                            <li>ng-init</li>
+                            <li>ng-model</li>
+                            <li>ng-focus</li>
+                        </ul>
+                    </section>
+                        
+                    <section>
+                        <h2>Directives créant un nouveau scope:</h2>
+                        <ul>
+                            <li>ng-controller</li>
+                            <li>ng-if</li>
+                            <li>ng-include</li>
+                            <li>ng-switch</li>
+                            <li>ng-repeat</li>
+                        </ul>
+                    </section>
+                </section>
+                
+                
+                
+                
+                <section>
+                    <section>
+                        <h1>Les modules</h1>
+                    </section>
+                    
+                    <section>
+                        <ul>
+                            <li>Permet un découpage de l'application.</li>
+                            <li class="fragment">Découpage par fonctionnalité préconisé.</li>
+                            <li class="fragment">Ne sert pas de namespace.</li>
+                            <li class="fragment">Le framework lui-même découpé en modules: <code>ngRoute</code>, <code>ngAnimate</code>, <code>ngMock</code>,..</li>
+                            <li class="fragment">Tous instanciés au démarrage (pas de lazy loading)</li>
+                        </ul>
+                        <br>
+                        <div class="fragment">
+                            <p>Exemple de déclaration de module:</p>
+                            <pre><code>angular.module('myapp', ['myapp.feature1'
+                        'myapp.feature2',
+                        'ng-route',
+                        'ng-animate'
+                        'ui-router']);</code></pre>
+                        </div>
+                    </section>
+                    
+                    <section>
+                        <p>Tous les controlleurs, directives, filters et services sont déclarées sur un module.</p>
+                        
+                        <p>Exemple:</p>
+                        <pre><code>angular.module('myapp', ['myapp.utils', 'myapp.gallery']);
+angular.module('myapp').controller('HomeCtrl', function() {});
+angular.module('myapp').service('myService', function() {});
 
-<div id="myTabContent" class="tab-content">
-  <div id="home">
-    <p>Raw denim you voluptate nisi qui.</p>
-  </div>
-  <div id="profile">
-    <p>Food truck jean stumptown echo park.</p>
-  </div>
-</div>
-	                    </code></pre>
-	                    
-	                    <code><pre>
-$('#myTab a').click(function (e) {
-  e.preventDefault()
-  $(this).tab('show')
+angular.module('myapp.gallery', []);
+angular.module('myapp.gallery').controller('GalleryCtrl', function() {});
+
+angular.module('myapp.utils', []);
+angular.module('myapp.utils').constant('myFilter', {});
+angular.module('myapp.utils').filter('myFilter', function() {});</code></pre>
+                    </section>
+                    
+                    <section>
+                        <h2>Au chargement de chaque module:</h2>
+                        
+                        <ul>
+                            <li>Exécution des <code>config()</code> puis des <code>run()</code>.</li>
+                            <li>On peut affecter autant de <code>config()</code> et de <code>run()</code></li>
+                            <li>Exécuté avant tous les controlleurs, directives, filtres,..</li>
+                        </ul>
+                        
+                        <pre><code>angular.module('myapp', []);
+                        
+angular.module('myapp').config(function($httpProvider) {
+    // Injection des providers des services
+    // (objets servant en interne à créer les instances des services)
+    // et de les configurer avant leur instanciation
+    $httpProvider.defaults.headers.common['Access-Control-Max-Age'] = '1728000';
+    $httpProvider.defaults.headers.common['Accept'] = 'application/json, text/javascript';
+    $httpProvider.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
+});
+
+angular.module('myapp').run(function($http) {
+  // Injection des instances des services pour utilisation
+  $http.post('/someUrl', {msg:'appStart'});
+});</code></pre>
+                        
+                    </section>
+                </section>
+                
+                
+                
+                <section>
+                    <section>
+                        <h1>Les services</h1>
+                    </section>
+                        
+                    <section>
+                        <ul>
+                            <li>Un service = simple objet JS avec propriétés et méthodes</li>
+                            <li>Utilise l'injection de dépendances.</li>
+                            <li>Créé une seule fois lors du premier appel (Singleton).</li>
+                            <li>Réutilisé lors des suivants pour toute la durée de vie de la SPA.</li>
+                            <li>Accessible de partout quelque soit le module sur lequel ils sont créés ou appelés.</li>
+                            <li>Peut être injecté dans controlleurs, filtres, services,..</li>
+                            <li>Utilisation à volonté pour alléger au maximum les controlleurs.</li>
+                        </ul>
+                    </section>
+                    
+                    <section>
+                        <h2>Fonctionnement interne de DI</h2>
+                        <ul>
+                            <li>Chaque service vient avec un provider qui sert à le créer.</li>
+                            <li>A l'initialisation d'un module, tous les providers des services sont réferencés.</li>
+                            <li>C'est seulement lors de sa première injection que l'instance du service est créée grâce à son provider.</li>
+                            <li>Lors des injections suivantes, Angular fournit directement l'instance, plus besoin du provider.</li>
+                        </ul>
+                        
+                        <blockquote>Dans la pratique, chaque provider posséde une méthode <code>$get</code> qui retourne l'instance et peut comporter des propriétés ou méthodes servant à configurer l'instanciation du service associé.</blockquote>
+                    </section>
+                    
+                    <section>
+                        <h2>Différentes déclarations de services</h2>
+                        <p>Il existe 5 méthodes pour déclarer un service mais dans tous les cas, ils s'injectent et s'utilisent de la même manière et il en existe toujours une seule instance.</p>
+                        <ul>
+                            <li>module.provider()</li>
+                            <li>module.factory()</li>
+                            <li>module.service()</li>
+                            <li>module.value()</li>
+                            <li>module.constant()</li>
+                        </ul>
+                        <p>Un <code>service()</code> est juste une manière plus facile d’écrire une <code>factory()</code>, qui est juste une manière plus simple d’écrire un <code>provider()</code>.</p>
+                    </section>
+                    
+                    <section>
+                        <h2>1/5: PROVIDER()</h2>
+                        <ul>
+	                        <li>Permet de paramétrer le service au démarrage du module.</li>
+	                        <li>Fonction <code>$get</code> obligatoire retournant l'instance du service.</li>
+                        </ul>
+                    
+                        <pre><code>app.provider('MyService', function() {
+    var scale = 1;
+    
+    this.setScale = function(newScale) {
+      scale = newScale;
+    };
+    
+    this.$get = function ($window) {
+        return {
+            getScreenWidth: function() {
+                return $window.innerWidth * scale;
+            },
+            getScreenHeight: function() {
+                return $window.innerHeight * scale;
+            }
+        };
+    };
+});
+
+app.config(function(MyServiceProvider) {
+  MyServiceProvider.setScale(10);
+});
+
+app.controller('AppCtrl', function($scope, MyService) {
+  var _width = MyService.getScreenWidth();
+});</code></pre>
+                    </section>
+                    
+                    <section>
+                        <h2>2/5: FACTORY()</h2>
+                        <ul>
+	                        <li>Simplification de la méthode <code>provider()</code>.</li>
+	                        <li>Equivalent à la méthode <code>$get</code> précédente.</li>
+	                        <li>Provider automatiquement créé par Angular.</li>
+                        </ul>
+                        
+                        <pre><code>app.factory('MyService', function($window) {
+    var scale = 1;
+    
+    return {
+        getScreenWidth: function() {
+            return $window.innerWidth * scale;
+        },
+        getScreenHeight: function() {
+            return $window.innerHeight * scale;
+        }
+    };
+});
+
+app.controller('AppCtrl', function($scope, MyService) {
+  var _width = MyService.getScreenWidth();
+});</code></pre>
+                    </section>
+                    
+                    <section>
+                        <h2>3/5: SERVICE()</h2>
+                        <ul>
+	                        <li>Simplification de la méthode <code>factory()</code>.</li>
+	                        <li>Fonction directement instanciée avec un <code>new</code> pour créer l'instance du service.</li>
+	                        <li>Pas besoin de <code>return</code> un objet, tout ce qui est attaché à <code>this</code> sera accessible par le biais du service.</li>
+                        </ul>
+                        
+                        <pre><code>app.service('MyService', function($window) {
+    var scale = 1;
+    
+    this.getScreenWidth = function() {
+        return $window.innerWidth * scale;
+    };
+    
+    this.getScreenHeight = function() {
+        return $window.innerHeight * scale;
+    }
+});
+
+app.controller('AppCtrl', function($scope, MyService) {
+  var _width = MyService.getScreenWidth();
+});</code></pre>
+                    </section>
+                    
+                    <section>
+                        <h2>4/5: VALUE()</h2>
+                        <ul>
+	                        <li>Permet de stocker un objet JS de type <code>object</code> ou bien de type primitif (<code>booléen</code>, <code>string</code>, <code>number</code>).</li>
+	                        <li>Inaccessible par les <code>provider</code> lors de la phase de configuration du module.</li>
+	                        <li>Peut être modifié pendant l'éxecution de l'application.</li>
+                        </ul>
+                        
+                        <pre><code>app.value('GoogleMapAPI_KEY', '5VUhR4kqvVvhXRH4BIAN')
+
+app.value('VideoData', {
+    title: 'Ters Akan şelale!',
+    description: 'Bu işte bir yanlışlık var diye İngiltere',
+    url: 'http://www.dailymotion.com/video/x28i2n3_ters-akan-selale_news'
 })
+</code></pre>
+                    </section>
+                    
+                    <section>
+                        <h2>5/5: CONSTANT()</h2>
+                        <ul>
+                        	<li>Fonctionne comme <code>value()</code> mais est accessible lors de la phase de configuration du module.</li>
+                        	<li>Malgré leur nom, elles peuvent être modifiée.</li>
+                        </ul>
+                        
+                        <pre><code>app.constant('UselessData', {
+    scale: 42
+});
+
+app.config(function(MyServiceProvider, UselessData) {
+  MyServiceProvider.setScale(UselessData.scale);
+});
+</code></pre>
+                    </section>
+                    
+                    <section>
+                    <h2>Exemple de déclaration de services:</h2>
+                    
+<pre><code>playerApp.value('Params', {
+  URL_API: 'https://api.dailymotion.com/videos',
+  URL_EMBED: 'http://www.dailymotion.com/embed/video',
+  VIDEOS_PER_PAGE: 12,
+  VIDEOS_AUTOPLAY: true,
+});
+
+playerApp.factory('Dailymotion', function($http, $sce, Params) {
+  var getApiUrl = function(terms, page) {
+      var api_params =  '?fields=id,title,description,duration_formatted,created_time&sort=relevance';
+      var api_limit =   '&limit=' + Params.VIDEOS_PER_PAGE;
+      var api_page =    '&page=' + page;
+      var api_search =  '&search=' + terms.split(' ').join('+');
+      var api_jsonp =   '&callback=JSON_CALLBACK';
+    
+    return Params.URL_API + api_params + api_limit + api_page + api_search + api_jsonp;
+  };
+  
+  var Service = {
+    getResults: function(terms, page) {
+      return $http({
+        method: 'JSONP',
+        url: getApiUrl(terms, page),
+        cache: true,
+        transformResponse: function (data, headers) {
+          data.nbPages = Math.ceil(data.total / data.limit);
+          return data;
+        }
+      });
+    },
+    
+    getIframeUrl: function(videoId) {
+          var url = Params.URL_EMBED + '/' + videoId + '?autoPlay=' + Params.VIDEOS_AUTOPLAY;
+          return $sce.trustAsResourceUrl(url);
+    }
+  };
+  
+  return Service;
+});</code></pre>
+                    </section>
+                        
+                        
+                    <section>
+                    	<p>Exemple d'utilisation de services:</p>
+                    	
+<pre><code>playerApp.controller('VideoPlayerModalCtrl', function($scope, $modalInstance, Dailymotion, video) {
+  $scope.video = video;
+  $scope.iframeUrl = Dailymotion.getIframeUrl(video.id);
+  
+  $scope.close = function () {
+    $modalInstance.close();
+  };
+});</code></pre>
+						<blockquote>En pratique, la méthode <code>provider()</code> est celle qui convient et qui est utilisé dans la plupart du cas.</blockquote>
+                    </section>
+                        
+                        
+                    <section>
+                        <h2>AngularJS comprend de nombreux services.</h2>
+                        
+                        <ul>
+                            <li>Commencent tous par $ (conventions)</li>
+                            <li>Couche d'abstraction utile pour fonctionner dans l'écosystéme AngularJs et pour être mockée lors des tests</li>
+                        </ul>
+                        
+                        <p>$scope, $http, $location, $filter, $window, $timeout, $interval,..</p>
+                    </section>
+                        
+                </section>
+                
+                
+                
+                
+                <section>
+                    <section>
+	                    <h1>Les filtres</h1>
+                    </section>
+                        
+                    <section>
+                    	<ul>
+		                    <li>Utilisation similaires à Twig.</li>
+		                    <li>Stateless = si la données à transformer ne change pas, le filtre ne sera pas réexeutée.</li>
+		                    <li>Utilisation en HTML ou en JS.</li>
+		                    <li>Filtres natif: date, uppercase, json</li>
+                    	</ul>
+                    </section>
+                        
+                    <section>
+                    	<h2>Création d'un filtre:</h2>
+	                    <pre><code>app.filter('truncate', function() {
+  return function(str, nbChar) {
+    return str.substring(0, nbChar);
+  };
+});
 	                    </code></pre>
-	                </section>
-	                
-	                <section>
-	                    <h1>Plus maintenable</h1>
-	                    <h2>Quand vous devez modifier l'UI:</h2>
-	                    <p>pas besoin de modifier le JS, bougez simplement les directives</p>
-	                    <p>CSS et JS vraiment séparés, aucun risque de casser l'un ou l'autre lors de changement de .class ou #id	</p>
-	                </section>
+                    </section>
+                        
+                    <section>
+                    	<h2>Utilisation HTML d'un filtre:</h2>
+	                    <pre><code><p>{{ description | truncate:10 }}</p>
+<p ng-bind="description | truncate:10"></p></code></pre>
+                    </section>
+                        
+                    <section>
+                    	<h2>Utilisation JS d'un filtre:</h2>
+	                    <pre><code>app.controller('MainCtrl', function($scope, $filter) {
+  var longText = 'Trés long texte, trés long texte, trés long texte';
+  
+  $scope.filteredText = $filter('truncate')(longText, 10);
+});</code></pre>
+	                    <pre><code>app.controller('MainCtrl', function($scope, truncateFilter) {
+  var longText = 'Trés long texte, trés long texte, trés long texte';
+  
+  $scope.filteredText = truncateFilter(longText, 10);
+});</code></pre>
+                    </section>
                 </section>
                 
-                
-                
                 <section>
-                    <h1>Etendre le language HTML</h1>
-                    <p class="fragment">Utilisation de nouvelles balises et attributs HTML</p>
-                    <p class="fragment">Angular parse le DOM et interpréte ces éléments</p>
-                    <p class="fragment">Pas de syntaxe de template spéciale, c'est du HTML!</p>
-                </section>
-                
-                
-                <section>
-                    <h1>C'est quoi une application AngularJS ?</h1>
-                    <p>Une partie du DOM sur laquelle on a mis l'attribut 'ng-app'</p>
+                    <section>
+	                    <h1>Les promesses</h1>
+                    </section>
                     
+                    <section>
+                    	<ul>
+		                    <li>trés utilisée dans l'écosystéme AngularJS</li>
+		                    <li>Plus souple que les callbacks</li>
+		                    <li>Possibilité des les imbriquées</li>
+		                    <li>Gestion des erreurs</li>
+		                    <li>Utilisation du service $q</li>
+                    	</ul>
+                    </section>
+                    
+                    <section>
                     <pre><code>
-                        <div ng-app="testApp">..</div>
+                    angular.module('myapp').service('PhotoList', function($q, Flickr) {
+                        return {
+                            get: function(terms) {
+                                var deferred = $q.defer();
+                                
+                                Flickr.getPhotos(terms).then(function(response) {
+                                    deferred.resolve(response.data)
+                                }, function(error) {
+                                    deferred.reject(error);
+                                }, function(event) {
+                                    deferred.notify({state: 'loading', progress: parseInt(20 + 80 * event.loaded / event.total) });
+                                });
+                                
+                                return deferred.promise;
+                            }
+                        };
+                    });
                     </code></pre>
-                    <p>Possibilité de mettre plusieurs applications sur la même page</p>
-                    <p>Le framework parse la partie du DOM et lorsqu'il trouve des directives, il </p>
-                </section>
-                
-                
-                <section>                                ## voir images http://swiip.github.io/yeoman-angular/slides/#/12
-                    <h1>Un framework MVC</h1>
+                    </section>
                     
-                    <p>Le controller décrit un modèle sous la forme d'un objet simple qu'il assigne au scope</p>
-                    <p>La vue utilise des directives (déclaratif) pour se liée au controller et le modèle</p>
-                </section>
-                
-                <section>
-                    <h1>Les directives</h1>
-                    
-                    <p>Permet d'étendre le language HTML, pas vers futur (WebComponents/Polymer)</p>
-                    <p>Permet d'encapsulation du JS et de l'HTML dans une ""boite noire"</p>
-                    <p>Génial pour l'encapsulation, les tests, la réutilisation, le partage</p>
-                    <p>AngularJS comprend de nombreuses directives</p>
-                    <p>commencent tous par ng- (conventions)</p>
-                    
-                    <h2>Directives simples</h2>
-                    <p>ng-click > appelle fonction du controller</p>
-                    <p>ng-class > </p>
-                    <p>ng-show/ng-hide > </p>
-                    <p>ng-init > </p>
-                    <p>ng-bind / {{ }} > (possibilité de changer accolade, pour eviter pb twig)</p>
-                    <p>ng-model > </p>
-                    <p>ng-focus > </p>
-                    
-                    <h2>Directives créant un nouveau scope</h2>
-                    <p>ng-controller > </p>
-                    <p>ng-if > </p>
-                    <p>ng-include > </p>
-                    <p>ng-switch > </p>
-                    <p>ng-repeat > </p>
-                </section>
-                
-                <section>
-                    <h1>Les services</h1>
-                    
-                    <p>AngularJS comprend de nombreux services</p>
-                    <p>commencent tous par $ (conventions)</p>
-                    <p>Couche d'abstraction utile pour fonctionner dans l'écosystéme AngularJs et pour être mockée lors des tests</p>
-                    <p>$scope, $http, $location, $filter</p>
-                    <p>$window, $timeout, $interval</p>
-<!--                     <p>Les différents type de services: constants, service, provider</p> -->
-                    
-                    <pre><code>angular.module('myapp').service('myapp', []);</code></pre>
-                </section>
-                
-                <section>
-                    <h1>Les modules</h1>
-                    
-                    <p>La déclaration de l'application</p>
-                    <p>Le découpage</p>
-                    <p>Le framework lui-même découpé en modules: 'ngRoute', 'ngAnimate', 'ngMock'</p>
-                    
-                    <pre><code>
-                    angular.module('myapp', ['myapp.feature1'
-                    						'myapp.feature2',
-                    						'ng-route',
-                    						'ng-animate'
-                    						'ui-router']);
-                    </code></pre>
-                    
-                    <pre><code>angular.module('myapp', []);</code></pre>
-                </section>
-                
-                <section>
-                    <h1>Les filtres</h1>
-                    
-                    <p>similaires à Twig</p>
-                    <p>stateless = si la données à transformer ne change pas, le filtre ne sera pas réexeutée</p>
-                    <p>Utilisé dans les templates ou bien en JS:</p>
-                    <p>exemple date, uppercase, json</p>
-                </section>
-                
-                <section>
-                    <h1>Les promesses</h1>
-                    
-                    <p>trés utilisée dans l'écosystéme AngularJS</p>
-                    <p>Plus souple que les callbacks</p>
-                    <p>Possibilité des les imbriquées</p>
-                    <p>Gestion des erreurs</p>
-                    <p>Utilisation du service $q</p>
                 </section>
                 
                 
                 
                 <section>
-                    <h1>Les controlleurs et les $scopes</h1>
+                    <section>
+	                    <h1>Le routing</h1>
+                    </section>
                     
-                    <p>Toujours liés entre eux</p>
-                    <p>Le scope est la glue entre controlleur et vue</p>
-                    <p>Le scope est un simple objet JS sur lequel on fait des bindings dans la vue</p>
-                    <p>Imbrication des controlleurs/scopes</p>
-                    <p>Pour chaque ngApp, un $rootScope est créé, puis chaque controller en cré un descendant, ce qui créé une arborescence</p>
-                    
-                    # démo plunker
+                    <section>
+                    	<ul>
+		                    <li>Module <code>ngRoute</code> trés basique, pas de vue imbriquées..</li>
+		                    <li>Ui-router, lib remplaçante trés poussée</li>
+		                    <li>AngularJS 1.4 pour trés bientôt avec un nouveau router</li>
+                    	</ul>
+                    </section>
                 </section>
                 
                 
                 <section>
-                    <h1>Les tests</h1>
+                    <section>
+	                    <h1>Les formulaires</h1> 
+                    </section>
                     
-                    <p>Conçu pour pouvoir tester facilement</p>
-                    
-                    <p>Tests unitaires: Karma (Application NodeJS pour faire tourner les tests) + Jasmine (Framework pour écrire les tests) + ngMock (module pour faire des mocks)</p>
-                    
-                    <p>Tests E2E (End to End): Protractor</p>
-                </section>
-                
-                
-                
-                <section>
-                    <h1>Le routing</h1>
-                    
-                    <p>module ngRoute trés basique, pas de vue imbriquées..</p>
-                    <p>ui-router, lib remplaçante trés poussée</p>
-                    <p>AngularJS 1.4 pour trés bientôt avec un nouveau router</p>
+                    <section>
+                    	<ul>
+		                    <li>Conçu pour CRUD donc gestion formulaires obligatoire</li>
+		                    <li>Details et démo ng-model, ngModelOptions et ngMessage</li>
+                    	</ul>
+                    </section>
                 </section>
                 
                 
                 <section>
-                    <h1>Les formulaires</h1> 
+                    <section>
+                    	<h1>Les animations</h1> 
+                    </section>
                     
-                    <p>Conçu pour CRUD donc gestion formulaires obligatoire</p>
-                    <p>Details et démo ng-model, ngModelOptions et ngMessage</p>
+                    <section>
+	                    <p>Découplées et réutilisables</p>
+	                    <p>Animations CSS et JS supportées</p>
+	                    
+	                    <p>Ajout module ngAnimate</p>
+	                    <p>Ajoute des classes</p>
+	                    
+	                    
+	                    <p>Exemple</p>
+	                    <p>Animation CSS fait main</p>
+	                    <p>Animation CSS avec Animate.css</p>
+	                    <p>Animation JS avec GreenSock</p>
+                    </section>
                 </section>
                 
                 
                 
+                
                 <section>
-                    <h1>Les animations</h1> 
+                    <section>
+                    	<h1>Les tests</h1>
+                    </section>
                     
-                    <p>Découplées et réutilisables</p>
-                    <p>Animations CSS et JS supportées</p>
-                    
-                    <p>Ajout module ngAnimate</p>
-                    <p>Ajoute des classes</p>
-                    
-                    
-                    <p>Exemple</p>
-                    <p>Animation CSS fait main</p>
-                    <p>Animation CSS avec Animate.css</p>
-                    <p>Animation JS avec GreenSock</p>
-                    
+                    <section>
+	                    <p>Conçu pour pouvoir tester facilement</p>
+	                    <p>Tests unitaires: Karma (Application NodeJS pour faire tourner les tests) + Jasmine (Framework pour écrire les tests) + ngMock (module pour faire des mocks)</p>
+	                    <p>Tests E2E (End to End): Protractor</p>
+                    </section>
                 </section>
                 
                 
@@ -279,351 +726,7 @@ $('#myTab a').click(function (e) {
                     <iframe data-src="http://embed.plnkr.co/MOsXBm/preview" width="1000" height="700"></iframe>
                 </section>
                 
-                
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-                <section>
-                    <h1>Reveal.js</h1>
-                    <h3>The HTML Presentation Framework</h3>
-                    <p>
-                        <small>Created by <a href="http://hakim.se">Hakim El Hattab</a> / <a href="http://twitter.com/hakimel">@hakimel</a></small>
-                    </p>
-                </section>
-
-                <section>
-                    <h2>Hello There</h2>
-                    <p>
-                        reveal.js enables you to create beautiful interactive slide decks using HTML. This presentation will show you examples of what it can do.
-                    </p>
-                </section>
-
-                <!-- Example of nested vertical slides -->
-                <section>
-                    <section>
-                        <h2>Vertical Slides</h2>
-                        <p>Slides can be nested inside of each other.</p>
-                        <p>Use the <em>Space</em> key to navigate through all slides.</p>
-                        <br>
-                        <a href="#" class="navigate-down">
-                            <img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-                        </a>
-                    </section>
-                    <section>
-                        <h2>Basement Level 1</h2>
-                        <p>Nested slides are useful for adding additional detail underneath a high level horizontal slide.</p>
-                    </section>
-                    <section>
-                        <h2>Basement Level 2</h2>
-                        <p>That's it, time to go back up.</p>
-                        <br>
-                        <a href="#/2">
-                            <img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Up arrow" style="-webkit-transform: rotate(180deg);">
-                        </a>
-                    </section>
-                </section>
-
-                <section>
-                    <h2>Slides</h2>
-                    <p>
-                        Not a coder? Not a problem. There's a fully-featured visual editor for authoring these, try it out at <a href="http://slides.com" target="_blank">http://slides.com</a>.
-                    </p>
-                </section>
-
-                <section>
-                    <h2>Point of View</h2>
-                    <p>
-                        Press <strong>ESC</strong> to enter the slide overview.
-                    </p>
-                    <p>
-                        Hold down alt and click on any element to zoom in on it using <a href="http://lab.hakim.se/zoom-js">zoom.js</a>. Alt + click anywhere to zoom back out.
-                    </p>
-                </section>
-
-                <section>
-                    <h2>Touch Optimized</h2>
-                    <p>
-                        Presentations look great on touch devices, like mobile phones and tablets. Simply swipe through your slides.
-                    </p>
-                </section>
-
-                <section data-markdown>
-                    <script type="text/template">
-                        ## Markdown support
-
-                        Write content using inline or external Markdown.
-                        Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
-
-                        ```
-                        <section data-markdown>
-                          ## Markdown support
-
-                          Write content using inline or external Markdown.
-                          Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
-                        </section>
-                        ```
-                    </script>
-                </section>
-
-                <section>
-                    <section id="fragments">
-                        <h2>Fragments</h2>
-                        <p>Hit the next arrow...</p>
-                        <p class="fragment">... to step through ...</p>
-                        <p><span class="fragment">... a</span> <span class="fragment">fragmented</span> <span class="fragment">slide.</span></p>
-
-                        <aside class="notes">
-                            This slide has fragments which are also stepped through in the notes window.
-                        </aside>
-                    </section>
-                    <section>
-                        <h2>Fragment Styles</h2>
-                        <p>There's different types of fragments, like:</p>
-                        <p class="fragment grow">grow</p>
-                        <p class="fragment shrink">shrink</p>
-                        <p class="fragment roll-in">roll-in</p>
-                        <p class="fragment fade-out">fade-out</p>
-                        <p class="fragment current-visible">current-visible</p>
-                        <p class="fragment highlight-red">highlight-red</p>
-                        <p class="fragment highlight-blue">highlight-blue</p>
-                    </section>
-                </section>
-
-                <section id="transitions">
-                    <h2>Transition Styles</h2>
-                    <p>
-                        You can select from different transitions, like: <br>
-                        <a href="?transition=none#/transitions">None</a> -
-                        <a href="?transition=fade#/transitions">Fade</a> -
-                        <a href="?transition=slide#/transitions">Slide</a> -
-                        <a href="?transition=convex#/transitions">Convex</a> -
-                        <a href="?transition=concave#/transitions">Concave</a> -
-                        <a href="?transition=zoom#/transitions">Zoom</a>
-                    </p>
-                </section>
-
-                <section id="themes">
-                    <h2>Themes</h2>
-                    <p>
-                        reveal.js comes with a few themes built in: <br>
-                        <!-- Hacks to swap themes after the page has loaded. Not flexible and only intended for the reveal.js demo deck. -->
-                        <a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/black.css'); return false;">Black (default)</a> -
-                        <a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/white.css'); return false;">White</a> -
-                        <a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/league.css'); return false;">League</a> -
-                        <a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/sky.css'); return false;">Sky</a> -
-                        <a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/beige.css'); return false;">Beige</a> -
-                        <a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/simple.css'); return false;">Simple</a> <br>
-                        <a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/serif.css'); return false;">Serif</a> -
-                        <a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/night.css'); return false;">Night</a> -
-                        <a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/moon.css'); return false;">Moon</a> -
-                        <a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/solarized.css'); return false;">Solarized</a>
-                    </p>
-                </section>
-
-                <section>
-                    <section data-background="#dddddd">
-                        <h2>Slide Backgrounds</h2>
-                        <p>
-                            Set <code>data-background="#dddddd"</code> on a slide to change the background color. All CSS color formats are supported.
-                        </p>
-                        <a href="#" class="navigate-down">
-                            <img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-                        </a>
-                    </section>
-                    <section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png">
-                        <h2>Image Backgrounds</h2>
-                        <pre><code>&lt;section data-background="image.png"&gt;</code></pre>
-                    </section>
-                    <section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png" data-background-repeat="repeat" data-background-size="100px">
-                        <h2>Tiled Backgrounds</h2>
-                        <pre><code style="word-wrap: break-word;">&lt;section data-background="image.png" data-background-repeat="repeat" data-background-size="100px"&gt;</code></pre>
-                    </section>
-                    <section data-background-video="https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.mp4,https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.webm" data-background-color="#000000">
-                        <div style="background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px;">
-                            <h2>Video Backgrounds</h2>
-                            <pre><code style="word-wrap: break-word;">&lt;section data-background-video="video.mp4,video.webm"&gt;</code></pre>
-                        </div>
-                    </section>
-                </section>
-
-                <section data-transition="slide" data-background="#4d7e65" data-background-transition="zoom">
-                    <h2>Background Transitions</h2>
-                    <p>
-                        Different background transitions are available via the backgroundTransition option. This one's called "zoom".
-                    </p>
-                    <pre><code>Reveal.configure({ backgroundTransition: 'zoom' })</code></pre>
-                </section>
-
-                <section data-transition="slide" data-background="#b5533c" data-background-transition="zoom">
-                    <h2>Background Transitions</h2>
-                    <p>
-                        You can override background transitions per-slide.
-                    </p>
-                    <pre><code style="word-wrap: break-word;">&lt;section data-background-transition="zoom"&gt;</code></pre>
-                </section>
-
-                <section>
-                    <h2>Pretty Code</h2>
-                    <pre><code data-trim contenteditable>
-function linkify( selector ) {
-  if( supports3DTransforms ) {
-
-    var nodes = document.querySelectorAll( selector );
-
-    for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
-      var node = nodes[i];
-
-      if( !node.className ) {
-        node.className += ' roll';
-      }
-    }
-  }
-}
-                    </code></pre>
-                    <p>Code syntax highlighting courtesy of <a href="http://softwaremaniacs.org/soft/highlight/en/description/">highlight.js</a>.</p>
-                </section>
-
-                <section>
-                    <h2>Marvelous List</h2>
-                    <ul>
-                        <li>No order here</li>
-                        <li>Or here</li>
-                        <li>Or here</li>
-                        <li>Or here</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h2>Fantastic Ordered List</h2>
-                    <ol>
-                        <li>One is smaller than...</li>
-                        <li>Two is smaller than...</li>
-                        <li>Three!</li>
-                    </ol>
-                </section>
-
-                <section>
-                    <h2>Tabular Tables</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Value</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Apples</td>
-                                <td>$1</td>
-                                <td>7</td>
-                            <tr>
-                            <tr>
-                                <td>Lemonade</td>
-                                <td>$2</td>
-                                <td>18</td>
-                            <tr>
-                            <tr>
-                                <td>Bread</td>
-                                <td>$3</td>
-                                <td>2</td>
-                            <tr>
-                        </tbody>
-                    </table>
-                </section>
-
-                <section>
-                    <h2>Clever Quotes</h2>
-                    <p>
-                        These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-                        &ldquo;The nice thing about standards is that there are so many to choose from&rdquo;</q> and block:
-                    </p>
-                    <blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-                        &ldquo;For years there has been a theory that millions of monkeys typing at random on millions of typewriters would
-                        reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.&rdquo;
-                    </blockquote>
-                </section>
-
-                <section>
-                    <h2>Intergalactic Interconnections</h2>
-                    <p>
-                        You can link between slides internally,
-                        <a href="#/2/3">like this</a>.
-                    </p>
-                </section>
-
-                <section>
-                    <h2>Speaker View</h2>
-                    <p>There's a <a href="https://github.com/hakimel/reveal.js#speaker-notes">speaker view</a>. It includes a timer, preview of the upcoming slide as well as your speaker notes.</p>
-                    <p>Press the <em>S</em> key to try it out.</p>
-
-                    <aside class="notes">
-                        Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
-                    </aside>
-                </section>
-
-                <section>
-                    <h2>Export to PDF</h2>
-                    <p>Presentations can be <a href="https://github.com/hakimel/reveal.js#pdf-export">exported to PDF</a>, here's an example:</p>
-                    <iframe src="//www.slideshare.net/slideshow/embed_code/42840540" width="445" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:3px solid #666; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
-                </section>
-
-                <section>
-                    <h2>Global State</h2>
-                    <p>
-                        Set <code>data-state="something"</code> on a slide and <code>"something"</code>
-                        will be added as a class to the document element when the slide is open. This lets you
-                        apply broader style changes, like switching the page background.
-                    </p>
-                </section>
-
-                <section data-state="customevent">
-                    <h2>State Events</h2>
-                    <p>
-                        Additionally custom events can be triggered on a per slide basis by binding to the <code>data-state</code> name.
-                    </p>
-                    <pre><code class="javascript" data-trim contenteditable style="font-size: 18px;">
-Reveal.addEventListener( 'customevent', function() {
-    console.log( '"customevent" has fired' );
-} );
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h2>Take a Moment</h2>
-                    <p>
-                        Press B or . on your keyboard to pause the presentation. This is helpful when you're on stage and want to take distracting slides off the screen.
-                    </p>
-                </section>
-
-                <section>
-                    <h2>Much more</h2>
-                    <ul>
-                        <li>Right-to-left support</li>
-                        <li><a href="https://github.com/hakimel/reveal.js#api">Extensive JavaScript API</a></li>
-                        <li><a href="https://github.com/hakimel/reveal.js#auto-sliding">Auto-progression</a></li>
-                        <li><a href="https://github.com/hakimel/reveal.js#parallax-background">Parallax backgrounds</a></li>
-                        <li><a href="https://github.com/hakimel/reveal.js#keyboard-bindings">Custom keyboard bindings</a></li>
-                    </ul>
-                </section>
-
-                <section style="text-align: left;">
-                    <h1>THE END</h1>
-                    <p>
-                        - <a href="http://slides.com">Try the online editor</a> <br>
-                        - <a href="https://github.com/hakimel/reveal.js">Source code &amp; documentation</a>
-                    </p>
-                </section>
 
             </div>
 
