@@ -173,7 +173,7 @@
                     </section>
                     
                     <section>
-                        <h2>Les controlleurs et les scopes</h2>
+                        <h2>Les controllers et les scopes</h2>
                         
                         <ul>
                             <li>Toujours liés entre eux.</li>
@@ -973,7 +973,7 @@ app.controller('GreetController', function($scope, MaPromesse) {
                     </section>
                     
                     <section>
-                        <h2>Affichage des erreurs</h2>
+                        <h2>Etats et erreurs du formulaire</h2>
                         
                         <p>Le formulaire et chaque champ ont des booléens assignés:</p>
                         
@@ -992,6 +992,117 @@ $scope.registerForm.courriel.$dirty; /* true si champ courriel n'a pas encore é
 $scope.registerForm.prenom.$error.required; /* true si validation required du champ prenom non remplie */
 $scope.registerForm.courriel.$error.email; /* true si validation email du champ courriel non remplie */</code></pre>
                     </section>
+                    
+                    <section>
+                        <p>Affichage des erreurs</p>
+                        
+                    	<pre><code><form name="registerForm" ng-submit="createUser(newUser)" novalidate>
+  
+  <div>
+    <label>Prénom:</label>
+    <input name="prenom" ng-model="newUser.firstname" type="text" ng-minlength=4 required />
+    <p ng-show="registerForm.prenom.$dirty && registerForm.prenom.$error.required">Prénom requis!</p>
+    <p ng-show="registerForm.prenom.$dirty && registerForm.prenom.$error.minlength">Prénom doit faire 4 caractéres minimum!</p>
+  </div>
+  
+  <div>
+    <label>Nom:</label>
+    <input name="nom" ng-model="newUser.lastname" type="text" ng-minlength=4 required />
+    <p ng-show="registerForm.nom.$dirty && registerForm.nom.$error.required">Nom requis!</p>
+    <p ng-show="registerForm.nom.$dirty && registerForm.nom.$error.minlength">Nom doit faire 4 caractéres minimum!</p>
+  </div>
+  
+  <div>
+    <label>Courriel:</label>
+    <input name="courriel" ng-model="newUser.email" type="email" required />
+    <p ng-show="registerForm.courriel.$dirty && registerForm.courriel.$error.required">Courriel requis!</p>
+    <p ng-show="registerForm.courriel.$dirty && registerForm.courriel.$error.email">Courriel doit contenir @ et..!</p>
+  </div>
+  
+  <div>
+    <label>Site web:</label>
+    <input name="siteweb" ng-model="newUser.website" type="url" required />
+    <p ng-show="registerForm.siteweb.$dirty && registerForm.siteweb.$error.required">Site web requis!</p>
+    <p ng-show="registerForm.siteweb.$dirty && registerForm.siteweb.$error.url">Site web doit être de la forme http://..!</p>
+  </div>
+  
+  <button type="submit" ng-disabled="registerForm.$invalid">Envoyer</button>
+</form></code></pre>
+						<a href="http://plnkr.co/edit/Wix7sD?p=preview" target="_blank">http://plnkr.co/edit/Wix7sD?p=preview</a>
+                    </section>
+                    
+                    <section>
+                    	<p>Encore mieux, le module ngMessages</p>
+                    	
+                    	<pre><code><script src="https://code.angularjs.org/1.3.14/angular-messages.js"></script></code></pre>
+                    	
+                    	<pre><code>var app = angular.module('myApp', ['ngMessages']);</code></pre>
+                    	
+                    	<pre><code><form name="registerForm" ng-submit="createUser(newUser)" novalidate>
+  
+  <div>
+    <label>Prénom:</label>
+    <input name="prenom" ng-model="newUser.firstname" type="text" ng-minlength=4 required />
+    
+    <ng-messages for="registerForm.prenom.$error" ng-show="registerForm.prenom.$dirty">
+      <p ng-message="required">Prénom requis!</p>
+      <p ng-message="minlength">Prénom doit faire 4 caractéres minimum!</p>
+    </ng-messages>
+  </div>
+  
+  <div>
+    <label>Nom:</label>
+    <input name="nom" ng-model="newUser.lastname" type="text" ng-minlength=4 required />
+    <ng-messages for="registerForm.nom.$error" ng-show="registerForm.nom.$dirty">
+      <p ng-message="required">Nom requis!</p>
+      <p ng-message="minlength">Nom doit faire 4 caractéres minimum!</p>
+    </ng-messages>
+  </div>
+  
+  <div>
+    <label>Courriel:</label>
+    <input name="courriel" ng-model="newUser.email" type="email" required />
+    <ng-messages for="registerForm.courriel.$error" ng-show="registerForm.courriel.$dirty">
+      <p ng-message="required">Courriel requis!</p>
+      <p ng-message="email">Courriel doit contenir @ et..!</p>
+    </ng-messages>
+  </div>
+  
+  <div>
+    <label>Site web:</label>
+    <input name="siteweb" ng-model="newUser.website" type="url" required />
+    <ng-messages for="registerForm.siteweb.$error" ng-show="registerForm.siteweb.$dirty">
+      <p ng-message="required">Site web requis!</p>
+      <p ng-message="url">Site web doit être de la forme http://..!</p>
+    </ng-messages>
+  </div>
+  
+  <button type="submit" ng-disabled="registerForm.$invalid">Envoyer</button>
+</form></code></pre>
+						<a href="http://plnkr.co/edit/00vSyb?p=preview" target="_blank">http://plnkr.co/edit/00vSyb?p=preview</a>
+                    </section>
+                    
+                    <section>
+                    	<h2>Bonus</h2>
+                    	
+                        <p>Angular ajoute des classes CSS sur les <code>input</code> en fonction de leur état.</p>
+                        
+                        <pre><code>/* SASS */
+
+form input {
+  border-width: 4px;
+  
+  &.ng-dirty {
+    &.ng-valid {
+      border-color: green;
+    }
+    
+    &.ng-invalid {
+      border-color: red;
+    }
+  }
+}</code></pre>
+                    </section>
                 </section>
                 
                 
@@ -1001,11 +1112,147 @@ $scope.registerForm.courriel.$error.email; /* true si validation email du champ 
                     </section>
                     
                     <section>
+                    	<h2>Différentes options possibles:</h2>
+                    	
                         <ul>
-                            <li>Module <code>ngRoute</code> trés basique, pas de vue imbriquées..</li>
-                            <li>Ui-router, lib remplaçante trés poussée</li>
-                            <li>AngularJS 1.4 pour trés bientôt avec un nouveau router</li>
+                            <li>Module <code>ngRoute</code>: Basé sur les routes (#/posts/12), trés basique, pas de vue imbriquées, plus mis à jour.</li><br>
+                            <li>Module <code>uiRouter</code>: Basé sur les states ('app.posts.details'), librairie remplaçante, beaucoup plus souple.</li><br>
+                            <li>Module <code>ngNewRouter</code> Nouveau router qui arrive avec la version 1.4 et sera aussi utilisé dans Angular 2.</li>
                         </ul>
+                    </section>
+                    
+                    <section>
+                    	<h2>ngRoute</h2>
+                    	
+                    	<pre><code style="max-height: 300px;">app.config(function($routeProvider) {
+  
+  $routeProvider.when(
+    '/page1', 
+    {
+      templateUrl: 'page1.tpl.html'
+    }
+  );
+  
+  $routeProvider.when(
+    '/page2/:name',
+    {
+      controller: 'Page2Ctrl',
+      templateUrl: 'page2.tpl.html'
+    }
+  );
+  
+  $routeProvider.when(
+    '/pages3/article/:id',
+    {
+      controller: function($scope, $routeParams) {
+        $scope.idArticle = $routeParams.id;
+      },
+      template:  '<div>\
+                    <h1>PAGE3</h1>\
+                    <p>Details de l\'article id: {{ idArticle }}</p>\
+                  </div>'
+    }
+  );
+  
+  $routeProvider.otherwise({redirectTo: '/page1'});
+});</code></pre>
+                    	<pre><code><ul>
+  <li><a href="#/page1">Page 1 (#/page1)</a></li>
+  <li><a href="#/page2/bertrand">Page 2 (#/page2/bertrand)</a></li>
+  <li><a href="#/page2/jack">Page 2 (#/page2/jack)</a></li>
+  <li><a href="#/page3/article/65">Page 3 (#/page3/article/65)</a></li>
+  <li><a href="#/page3/article/8">Page 3 (#/page3/article/8)</a></li>
+</ul></code></pre>
+						<a href="http://plnkr.co/edit/rFUxCD?p=preview" target="_blank">http://plnkr.co/edit/rFUxCD?p=preview</a>
+                    </section>
+                    
+                    <section>
+                    	<h2>uiRouter</h2>
+                    	
+                    	<pre><code style="max-height: 300px;">app.config(function($stateProvider, $urlRouterProvider) {
+  
+  $stateProvider.state(
+    'app',
+    {
+      url: '/', 
+      template: '<div ui-view></div>'
+    }
+  );
+  
+  $stateProvider.state(
+    'app.page1',
+    {
+      url: 'page1/', 
+      templateUrl: 'page1.tpl.html'
+    }
+  );
+  
+  $stateProvider.state(
+    'app.page1.detailA',
+    {
+      url: 'detailA',
+      template:  '<div>\
+                    <h1>DETAILA</h1>\
+                  </div>'
+    }
+  );
+  
+  $stateProvider.state(
+    'app.page1.detailB',
+    {
+      url: 'detailB',
+      template:  '<div>\
+                    <h1>DETAILB</h1>\
+                  </div>'
+    }
+  );
+  
+  $stateProvider.state(
+    'app.page2',
+    {
+      url: 'page2/:name',
+      controller: 'Page2Ctrl',
+      templateUrl: 'page2.tpl.html'
+    }
+  );
+  
+  $stateProvider.state(
+    'app.page3',
+    {
+      url: 'page3/article/:id',
+      controller: function($scope, $stateParams) {
+        $scope.idArticle = $stateParams.id;
+      },
+      template:  '<div>\
+                    <h1>PAGE3</h1>\
+                    <p>Details de l\'article id: {{ idArticle }}</p>\
+                  </div>'
+    }
+  );
+  
+  $urlRouterProvider.otherwise('/page1');
+});</code></pre>
+                    	<pre><code><ul>
+  <li><a ui-sref="app.page1">Page 1 (app.page1)</a></li>
+  <li><a ui-sref="app.page1.detailA">Page 1 (app.page1.detailA)</a></li>
+  <li><a ui-sref="app.page1.detailB">Page 1 (app.page1.detailB)</a></li>
+  <li><a ui-sref="app.page2({name: 'bertrand'})">Page 2 (app.page2({name: 'bertrand'}))</a></li>
+  <li><a ui-sref="app.page2({name: 'jack'})">Page 2 (app.page2({name: 'jack'}))</a></li>
+  <li><a ui-sref="app.page3({id: 65})">Page 3 (app.page3({id: 65}))</a></li>
+  <li><a ui-sref="app.page3({id: 8})">Page 3 (app.page3({id: 8}))</a></li>
+</ul></code></pre>
+						<a href="http://plnkr.co/edit/xSpKKD?p=preview" target="_blank">http://plnkr.co/edit/xSpKKD?p=preview</a>
+                    </section>
+                    
+                    <section>
+                    	<h2>ngNewRouter</h2>
+                    	
+                        <ul>
+                            <li>Trés trés récent et encore en version béta.</li><br>
+                            <li>Basé sur le principe des composants trés puissant.</li><br>
+                            <li>Va être un élément clé pour la migration vers Angular 2.</li><br>
+                        </ul>
+                    	
                     </section>
                 </section>
                 
