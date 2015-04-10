@@ -50,6 +50,10 @@
         .reveal li > code {
             color: #8b743d;
         }
+        .reveal .credits-link {
+            font-size: .35em;
+            display: block;
+        }
         </style>
     
 
@@ -72,8 +76,18 @@
                     </section>
                     
                     <section>
-                        <p>BackboneJS = impératif, le JS commande l'HTML</p>
-                        <p class="fragment">AngularJS = déclaratif, le HTML commande le JS</p>
+                        <div>
+                        <p>jQuery/BackboneJS = impératif, le JS commande l'HTML</p>
+<pre><code><button id="mapBtn">Afficher la carte</button></code></pre>
+<pre><code>$('#mapBtn').on('click', function(event) {
+  // do something
+});</code></pre></div>
+                        <div class="fragment">
+                        <p>AngularJS = déclaratif, le HTML commande le JS</p>
+<pre><code><button ng-click="showMap()">Afficher la carte</button></code></pre>
+<pre><code>$scope.showMap() {
+  // do something
+}</code></pre></div>
                         <br>
                         <p class="fragment">impératif = difficile à organiser et maintenir</p>
                         <p class="fragment">déclaratif = plus simple à lire et moins de code</p>
@@ -110,11 +124,11 @@
                     </section>
                     
                     <section>
-                    	<ul>
-	                        <li>Utilisation de nouvelles balises et attributs HTML</li>
-	                        <li class="fragment">Angular parse le DOM et interpréte ces éléments</li>
-	                        <li class="fragment">Pas de syntaxe de template spéciale, c'est du HTML!</li>
-                    	</ul>
+                        <ul>
+                            <li>Utilisation de nouvelles balises et attributs HTML</li>
+                            <li class="fragment">Angular parse le DOM et interpréte ces éléments</li>
+                            <li class="fragment">Pas de syntaxe de template spéciale, c'est du HTML!</li>
+                        </ul>
                     </section>
                 </section>
                 
@@ -154,7 +168,8 @@
                     
                     <section>
                         <img data-src="images/mvc.png"/>
-                        <a href="http://swiip.github.io/yeoman-angular" target="_blank">http://swiip.github.io</a>
+                        
+                        <a href="http://swiip.github.io/yeoman-angular" target="_blank" class="credits-link">http://swiip.github.io</a>
                     </section>
                     
                     <section>
@@ -163,9 +178,169 @@
                         <ul>
                             <li>Toujours liés entre eux.</li>
                             <li>Le scope est la glue entre controlleur et vue.</li>
-                            <li>Le scope est un simple objet JS sur lequel on fait des bindings dans la vue.</li>
-                            <li>Imbrication des <code>controlleurs</code>/<code>scopes</code>.</li>
-                            <li>Pour chaque <code>ngApp</code>, un <code>$rootScope</code> est créé, puis chaque controlleur crée un descendant, ce qui créé une arborescence.</li>
+                            <li>Le scope est un simple objet JS sur lequel on ajoute valeurs et méthodes.</li>
+                            <li>Nouvelle instance créée à la volée au besoin puis détruite quand plus utile (pas de persistance).</li>
+                            <li>Aucune manipulation de DOM dans les <code>controllers</code>.</li>
+                        </ul>
+                    </section>
+                    
+                    <section>
+                        <ul>
+                            <li>Pour chaque <code>ngApp</code>, un <code>$rootScope</code> est créé, puis chaque controlleur crée un <code>scope</code> descendant, ce qui créé une arborescence.</li>
+                            <li>Chaque <code>$scope</code> peut accéder à son parent grâce à <code>$scope.$parent</code>.</li>
+                        </ul>
+                        
+                        <pre><code><div ng-app="scopeExample">
+  <div class="show-scope-demo">
+    <div ng-controller="GreetController">
+      Hello {{name}}!
+    </div>
+    <div ng-controller="ListController">
+      <ol>
+        <li ng-repeat="name in names">{{name}} from {{department}}</li>
+      </ol>
+    </div>
+  </div>
+</div></code></pre>
+                    </section>
+                    
+                    <section>
+                        <ul>
+                            <li>Dans le JS, chaque <code>scope</code> hérite des propriétés et méthodes de ses parents grâce au prototypage.</li>
+                            <li>Dans le DOM, on retrouve également cet imbrication/arborescence des <code>scopes</code> / <code>controllers</code>.</li>
+                        </ul>
+                        
+                        <img data-src="images/concepts-scope.png"/>
+                        <a href="https://docs.angularjs.org/guide/scope" target="_blank" class="credits-link">https://docs.angularjs.org/guide/scope</a>
+                    </section>
+                </section>
+                
+                
+                <section>
+                    <section>
+                        <h1>Les events</h1>
+                    </section>
+                    
+                    <section>
+                        <ul>
+                            <li>S'emettent et s'interceptent à partir des <code>scopes</code>.</li>
+                            <li>Permet passer des informations d'un <code>scope</code> à un autre.</li>
+                            <li>Comprend un nom unique pour toute l'application et une liste d'arguments.</li>
+                            <li>A utiliser avec modération.</li>
+                        </ul>
+                    </section>
+                    
+                    <section>
+                        <h2>2 méthodes pour émettre un évènement</h2>
+                        
+                        <ul>
+                            <li>
+                                <p><code>$emit</code></p>
+                            </li>
+                            <li>
+                                <p><code>$broadcast</code></p>
+                            </li>
+                        </ul>
+                    </section>
+                    
+                    <section>
+                        <h2>$emit</h2>
+                        
+                        <p>L'<code>event</code> remonte la hiérarchie des <code>scopes</code> jusqu'au <code>$rootScope</code> et peut être intercepté par chacun d'entre eux.</p>
+                        
+                        <pre><code>$scope.$emit('player.events.playVideo', video);</code></pre>
+
+                        <img data-src="images/scope_emit.png"/>
+                        <a href="http://www.frangular.com/2013/01/angularjs-scopes-et-evenements.html" target="_blank" class="credits-link">http://www.frangular.com/</a>
+                    </section>
+                    
+                    <section>
+                        <h2>$broadcast</h2>
+                        <p>L'<code>event</code> descend chaque branche de la hiérarchie des <code>scopes</code> en partant du <code>$ccope</code> émetteur et peut être intercepté par chacun d'entre eux.</p>
+                        
+                        <pre><code>$scope.$broadcast('player.events.playVideo', video)</code></pre>
+                        
+                        <img data-src="images/scope_broadcast.png"/>
+                        <a href="http://www.frangular.com/2013/01/angularjs-scopes-et-evenements.html" target="_blank" class="credits-link">http://www.frangular.com/</a>    
+                    </section>
+                    
+                    <section>
+                        <h2>Interception avec $on</h2>
+                        
+                        <pre><code>$scope.$on('player.events.playVideo', function(event, video) {
+  $scope.playingVideo = video;
+});</code></pre>
+                        
+                        <img data-src="images/scope_broadcast.png"/>
+                        <a href="http://www.frangular.com/2013/01/angularjs-scopes-et-evenements.html" target="_blank" class="credits-link">http://www.frangular.com/</a>    
+                    </section>
+                    
+                    <section>
+                    <pre><code>app.controller('MainController', function($scope, $rootScope) {
+  $scope.mainData = {
+    logs: ''
+  };
+  
+  $scope.$on('eventEmitedName', function(event, data) {
+    $scope.mainData.logs = $scope.mainData.logs + '\nMainController - receive EVENT "' + event.name + '" with message = "' + data.message + '"';
+  });
+  
+  $rootScope.$on('eventEmitedName', function(event, data) {
+    $scope.mainData.logs = $scope.mainData.logs + '\n$rootScope - receive EVENT "' + event.name + '" with message = "' + data.message + '"';
+  });
+});
+
+app.controller('ParentController', function($scope) {
+  $scope.parentData = {
+    message: 'messageAAA'
+  };
+  
+  $scope.broadcastEvent = function() {
+    $scope.$broadcast('eventBroadcastedName', $scope.parentData);
+  };
+  
+  $scope.$on('eventEmitedName', function(event, data) {
+    $scope.mainData.logs = $scope.mainData.logs + '\nParentController - receive EVENT "' + event.name + '" with message = "' + data.message + '"';
+  });
+});
+
+app.controller('ChildController', function($scope) {
+  $scope.childData = {
+    message: 'messageBBB'
+  };
+  
+  $scope.emitEvent = function() {
+    $scope.$emit('eventEmitedName', $scope.childData);
+  };
+  
+  $scope.$on('eventBroadcastedName', function(event, data) {
+    $scope.mainData.logs = $scope.mainData.logs + '\nChildController - receive EVENT "' + event.name + '" with message = "' + data.message + '"';
+  });
+});</code></pre>
+                        <a href="http://plnkr.co/edit/am6IDw?p=preview" target="_blank">http://plnkr.co/edit/am6IDw?p=preview</a>
+                    </section>
+                </section>
+                
+                
+                <section>
+                    <section>
+                        <h1>Le data-binding</h1>
+                    </section>
+                    
+                    <section>
+                        <ul>
+                            <li>Synchronisation automatique entre le modèle et la vue.</li>
+                            <li class="fragment">
+                                <p>Unidirectionnel avec <code>ngBind</code> / <code>{{ }}</code>.</p>
+                                <pre><code><p>{{ user.firstname }}</p></code></pre>
+                            </li>
+                            <li class="fragment">
+                                <p>Bidirectionnel avec <code>ngModel</code>.</p>
+                                <pre><code><input ng-model="user.firstname" /></code></pre>
+                            </li>
+                            <li class="fragment">Terminé les sélecteurs CSS dans le JS.</li>
+                            <li class="fragment">Evite de (trés) nombreuses lignes de code JS.</li>
+                            <li class="fragment">Surcouche qui évite un grand nombre d'erreurs.</li>
                         </ul>
                     </section>
                 </section>
@@ -229,7 +404,7 @@
                         <h2>Directives simples:</h2>
                         <ul>
                             <li>ng-bind / {{ }}</li>
-                            <li>ng-click</li>
+                            <li>ng-click / ngDblclick / ngMouseenter / ..</li>
                             <li>ng-class</li>
                             <li>ng-show / ng-hide</li>
                             <li>ng-init</li>
@@ -266,19 +441,31 @@
                             <li class="fragment">Le framework lui-même découpé en modules: <code>ngRoute</code>, <code>ngAnimate</code>, <code>ngMock</code>,..</li>
                             <li class="fragment">Tous instanciés au démarrage (pas de lazy loading)</li>
                         </ul>
-                        <br>
-                        <div class="fragment">
-                            <p>Exemple de déclaration de module:</p>
+                    </section>
+                    
+                    <section>
+                        <ul>
+                            <li>Application AngularJS = Un module principal + modules dont le principal dépend.</li>
+                        </ul>
+                        
+                        <div>
+                            <p>Déclaration de module:</p>
                             <pre><code>angular.module('myapp', ['myapp.feature1'
                         'myapp.feature2',
                         'ng-route',
                         'ng-animate'
                         'ui-router']);</code></pre>
                         </div>
+                        <div>
+                            <p>Récupération de module:</p>
+                            <pre><code>angular.module('myapp');</code></pre>
+                        </div>
                     </section>
                     
                     <section>
                         <p>Tous les controlleurs, directives, filters et services sont déclarées sur un module.</p>
+                        <img data-src="images/module-diagram.jpg" style="transform: scale(.8);"/>
+                        <a href="http://www.manning.com/aden/" target="_blank" class="credits-link">http://www.manning.com/aden/</a>
                         
                         <p>Exemple:</p>
                         <pre><code>angular.module('myapp', ['myapp.utils', 'myapp.gallery']);
@@ -362,17 +549,19 @@ angular.module('myapp').run(function($http) {
                             <li>module.value()</li>
                             <li>module.constant()</li>
                         </ul>
-                        <p>Un <code>service()</code> est juste une manière plus facile d’écrire une <code>factory()</code>, qui est juste une manière plus simple d’écrire un <code>provider()</code>.</p>
+                        <p><code>factory()</code> et <code>service()</code> sont juste des manières plus simples d’écrire un <code>provider()</code>.</p>
                     </section>
                     
                     <section>
                         <h2>1/5: PROVIDER()</h2>
                         <ul>
-	                        <li>Permet de paramétrer le service au démarrage du module.</li>
-	                        <li>Fonction <code>$get</code> obligatoire retournant l'instance du service.</li>
+                            <li>Permet de paramétrer le service au démarrage du module.</li>
+                            <li>Fonction <code>$get</code> obligatoire retournant l'instance du service.</li>
                         </ul>
                     
-                        <pre><code>app.provider('MyService', function() {
+                        <pre><code>var app = angular.module('myapp');
+                        
+app.provider('MyService', function() {
     var scale = 1;
     
     this.setScale = function(newScale) {
@@ -403,9 +592,9 @@ app.controller('AppCtrl', function($scope, MyService) {
                     <section>
                         <h2>2/5: FACTORY()</h2>
                         <ul>
-	                        <li>Simplification de la méthode <code>provider()</code>.</li>
-	                        <li>Equivalent à la méthode <code>$get</code> précédente.</li>
-	                        <li>Provider automatiquement créé par Angular.</li>
+                            <li>Simplification de la méthode <code>provider()</code>.</li>
+                            <li>Equivalent à la méthode <code>$get</code> précédente.</li>
+                            <li>Provider automatiquement créé par Angular.</li>
                         </ul>
                         
                         <pre><code>app.factory('MyService', function($window) {
@@ -429,9 +618,9 @@ app.controller('AppCtrl', function($scope, MyService) {
                     <section>
                         <h2>3/5: SERVICE()</h2>
                         <ul>
-	                        <li>Simplification de la méthode <code>factory()</code>.</li>
-	                        <li>Fonction directement instanciée avec un <code>new</code> pour créer l'instance du service.</li>
-	                        <li>Pas besoin de <code>return</code> un objet, tout ce qui est attaché à <code>this</code> sera accessible par le biais du service.</li>
+                            <li>Simplification de la méthode <code>provider()</code>.</li>
+                            <li>Fonction directement instanciée avec un <code>new</code> pour créer l'instance du service.</li>
+                            <li>Pas besoin de <code>return</code> un objet, tout ce qui est attaché à <code>this</code> sera accessible par le biais du service.</li>
                         </ul>
                         
                         <pre><code>app.service('MyService', function($window) {
@@ -454,9 +643,10 @@ app.controller('AppCtrl', function($scope, MyService) {
                     <section>
                         <h2>4/5: VALUE()</h2>
                         <ul>
-	                        <li>Permet de stocker un objet JS de type <code>object</code> ou bien de type primitif (<code>booléen</code>, <code>string</code>, <code>number</code>).</li>
-	                        <li>Inaccessible par les <code>provider</code> lors de la phase de configuration du module.</li>
-	                        <li>Peut être modifié pendant l'éxecution de l'application.</li>
+                            <li>Stocker un objet JS de type <code>object</code> ou bien de type primitif (<code>booléen</code>, <code>string</code>, <code>number</code>).</li>
+                            <li>Inaccessible par les <code>provider</code> lors de la phase de configuration du module.</li>
+                            <li>Peut être modifié pendant l'éxecution de l'application.</li>
+                            <li>Impossible d'utiliser l'injection de dépendances pour utiliser d'autres services.</li>
                         </ul>
                         
                         <pre><code>app.value('GoogleMapAPI_KEY', '5VUhR4kqvVvhXRH4BIAN')
@@ -466,14 +656,18 @@ app.value('VideoData', {
     description: 'Bu işte bir yanlışlık var diye İngiltere',
     url: 'http://www.dailymotion.com/video/x28i2n3_ters-akan-selale_news'
 })
+
+app.controller('AppCtrl', function($scope, VideoData) {
+  $scope.video = VideoData;
+});
 </code></pre>
                     </section>
                     
                     <section>
                         <h2>5/5: CONSTANT()</h2>
                         <ul>
-                        	<li>Fonctionne comme <code>value()</code> mais est accessible lors de la phase de configuration du module.</li>
-                        	<li>Malgré leur nom, elles peuvent être modifiée.</li>
+                            <li>Fonctionne comme <code>value()</code> mais est accessible lors de la phase de configuration du module.</li>
+                            <li>Malgré leur nom, elles peuvent être modifiée.</li>
                         </ul>
                         
                         <pre><code>app.constant('UselessData', {
@@ -482,6 +676,10 @@ app.value('VideoData', {
 
 app.config(function(MyServiceProvider, UselessData) {
   MyServiceProvider.setScale(UselessData.scale);
+});
+
+app.controller('AppCtrl', function($scope, UselessData) {
+  $scope.scale = UselessData.scale;
 });
 </code></pre>
                     </section>
@@ -532,8 +730,8 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                         
                         
                     <section>
-                    	<p>Exemple d'utilisation de services:</p>
-                    	
+                        <p>Exemple d'utilisation de services:</p>
+                        
 <pre><code>playerApp.controller('VideoPlayerModalCtrl', function($scope, $modalInstance, Dailymotion, video) {
   $scope.video = video;
   $scope.iframeUrl = Dailymotion.getIframeUrl(video.id);
@@ -542,19 +740,23 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
     $modalInstance.close();
   };
 });</code></pre>
-						<blockquote>En pratique, la méthode <code>provider()</code> est celle qui convient et qui est utilisé dans la plupart du cas.</blockquote>
+                        <blockquote>En pratique, <code>factory()</code> et <code>value()</code> sont utilisés dans la plupart du cas.</blockquote>
                     </section>
                         
                         
                     <section>
-                        <h2>AngularJS comprend de nombreux services.</h2>
+                        <h2>Services fournis par AngularJS</h2>
+                        
+                        <p>$http, $location, $filter, $window, $timeout, $interval, $animate, $rootScope, $document,..</p>
                         
                         <ul>
                             <li>Commencent tous par $ (conventions)</li>
-                            <li>Couche d'abstraction utile pour fonctionner dans l'écosystéme AngularJs et pour être mockée lors des tests</li>
+                            <li>Couche d'abstraction utile pour fonctionner dans l'écosystéme AngularJs et pour être mockée lors des tests.</li>
+                            <li><code>Providers</code> associés pour les configurer au démarrage:</li>
                         </ul>
                         
-                        <p>$scope, $http, $location, $filter, $window, $timeout, $interval,..</p>
+                        <p>$httpProvider, $locationProvider, $filterProvider, $animateProvider, $rootScopeProvider,..</p>
+                        
                     </section>
                         
                 </section>
@@ -564,136 +766,268 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                 
                 <section>
                     <section>
-	                    <h1>Les filtres</h1>
+                        <h1>Les filtres</h1>
                     </section>
                         
                     <section>
-                    	<ul>
-		                    <li>Utilisation similaires à Twig.</li>
-		                    <li>Stateless = si la données à transformer ne change pas, le filtre ne sera pas réexeutée.</li>
-		                    <li>Utilisation en HTML ou en JS.</li>
-		                    <li>Filtres natif: date, uppercase, json</li>
-                    	</ul>
+                        <ul>
+                            <li>Fonction qui transforme un input en output.</li>
+                            <li>Utilisation similaires à Twig.</li>
+                            <li>Stateless = si la données à transformer ne change pas, le filtre ne sera pas réexeutée.</li>
+                            <li>Utilisation en HTML ou en JS.</li>
                     </section>
                         
                     <section>
-                    	<h2>Création d'un filtre:</h2>
-	                    <pre><code>app.filter('truncate', function() {
+                        <h2>Création d'un filtre:</h2>
+                        <pre><code>app.filter('truncate', function() {
   return function(str, nbChar) {
     return str.substring(0, nbChar);
   };
 });
-	                    </code></pre>
+                        </code></pre>
                     </section>
                         
                     <section>
-                    	<h2>Utilisation HTML d'un filtre:</h2>
-	                    <pre><code><p>{{ description | truncate:10 }}</p>
+                        <h2>Utilisation HTML d'un filtre:</h2>
+                        <pre><code><p>{{ description | truncate:10 }}</p>
 <p ng-bind="description | truncate:10"></p></code></pre>
+
+                        <p>Possibilité de les cumuler:</p>
+                        <pre><code><p>{{ data | filterA:param1 | filterB | filterC:param1:param2 }}</p></code></pre>
                     </section>
                         
                     <section>
-                    	<h2>Utilisation JS d'un filtre:</h2>
-	                    <pre><code>app.controller('MainCtrl', function($scope, $filter) {
+                        <h2>Utilisation JS d'un filtre:</h2>
+                        <pre><code>app.controller('MainCtrl', function($scope, $filter) {
   var longText = 'Trés long texte, trés long texte, trés long texte';
   
   $scope.filteredText = $filter('truncate')(longText, 10);
 });</code></pre>
-	                    <pre><code>app.controller('MainCtrl', function($scope, truncateFilter) {
+                        <pre><code>app.controller('MainCtrl', function($scope, truncateFilter) {
   var longText = 'Trés long texte, trés long texte, trés long texte';
   
   $scope.filteredText = truncateFilter(longText, 10);
 });</code></pre>
                     </section>
+                    
+                    <section>
+                        <h2>Filtres natifs: date, uppercase, json,..</h2>
+                        
+                        <pre><code>{{ today | date:'short' }}      <!-- 1/24/14 12:09 PM -->
+{{ today | date:'yyyy' }}       <!-- 2014 -->
+
+{{ 789123.4567 | number:2 }}    <!-- 789,123.46 -->
+
+{{ 123 | currency }}            <!-- 123$ -->
+
+{{ 'Vincent' | uppercase }}     <!-- VINCENT -->
+{{ 'Vincent' | lowercase }}     <!-- vincent -->
+{{ 'Je fais un essai' | limitTo: 2}}        <!-- Je -->
+{{ 'Je fais un essai' | limitTo: -5}}       <!-- essai -->
+
+{{ [1, 2, 3, 4] | limitTo: 2}}              <!-- [1,2] -->
+{{ ['alpha', 'beta', 'gamma'] | filter:'e' }}   <!-- ['beta'] -->
+
+{{  [{'nom': 'Nabet', 'prenom':'Vincent'},
+     {'nom': 'Van Gogh', 'prenom':'Vincent'}] | filter:{'nom':'Nabet'}:true }}
+     <!-- {'nom': 'Nabet', 'prenom':'Vincent'} -->  <!-- Rq: $ comme jocker clé -->
+
+{{ ['alpha', 'beta', 'gamma'] | filter:fourCharac }}   <!-- ['beta'] --></code></pre>
+<pre><code>$scope.fourCharac = function(elem) { return elem.length === 4;}</code></pre>
+                    </section>
                 </section>
                 
                 <section>
                     <section>
-	                    <h1>Les promesses</h1>
+                        <h1>Les promesses</h1>
                     </section>
                     
                     <section>
-                    	<ul>
-		                    <li>trés utilisée dans l'écosystéme AngularJS</li>
-		                    <li>Plus souple que les callbacks</li>
-		                    <li>Possibilité des les imbriquées</li>
-		                    <li>Gestion des erreurs</li>
-		                    <li>Utilisation du service $q</li>
-                    	</ul>
+                        <ul>
+                            <li>Promise = objet JS correspondant au résultat différé d'une opération asynchrone.</li>
+                            <li>Trés utilisée dans l'écosystéme AngularJS.</li>
+                            <li>Plus souple que les callbacks.</li>
+                            <li>Possibilité des les imbriquer.</li>
+                            <li>Gestion des erreurs.</li>
+                        </ul>
                     </section>
                     
                     <section>
-                    <pre><code>
-                    angular.module('myapp').service('PhotoList', function($q, Flickr) {
-                        return {
-                            get: function(terms) {
-                                var deferred = $q.defer();
-                                
-                                Flickr.getPhotos(terms).then(function(response) {
-                                    deferred.resolve(response.data)
-                                }, function(error) {
-                                    deferred.reject(error);
-                                }, function(event) {
-                                    deferred.notify({state: 'loading', progress: parseInt(20 + 80 * event.loaded / event.total) });
-                                });
-                                
-                                return deferred.promise;
-                            }
-                        };
-                    });
-                    </code></pre>
+                        <ul>
+                            <li>Les services <code>$http</code> et <code>$timeout</code> retournent une promesse.</li>
+                        </ul>
+                    <pre><code>app.controller('AppController', function($scope, $timeout) {
+  var promise = $timeout(3000);
+  
+  $scope.name = 'waiting promise resolve';
+  
+  promise.then(function() {
+    $scope.name = 'resolved!';
+  });
+});</code></pre>
+                    <a href="http://plnkr.co/edit/sYinVP?p=preview" target="_blank">http://plnkr.co/edit/sYinVP?p=preview</a>
+                    
+                    <pre><code>app.controller('GreetController', function($scope, $http) {
+  var promise = $http.get('https://api.github.com/users/bertrandg');
+  
+  promise.then(function(response) {
+    $scope.user = response.data;
+  }, function(reason) {
+    $scope.error = reason;
+  });
+  
+  $scope.loading = true;
+  promise.finally(function(){
+    $scope.loading = false;
+  });
+});</code></pre>
+                    <a href="http://plnkr.co/edit/7fbtsQ?p=preview" target="_blank">http://plnkr.co/edit/7fbtsQ?p=preview</a>
                     </section>
                     
+                    <section>
+                        <ul>
+                            <li>Création de promesses grâce au service $q.</li>
+                        </ul>
+                    <pre><code>app.factory('MaPromesse', function($q, $timeout) {
+  
+  var Service = {
+    get: function() {
+      var deferred = $q.defer();
+      
+      $timeout(3000).then(function() {
+        //deferred.resolve("terminé !");
+        deferred.reject("terminé mais mal !");
+      });
+      
+      return deferred.promise;
+    }
+  };
+  
+  return Service;
+});
+
+app.controller('GreetController', function($scope, MaPromesse) {
+  
+  MaPromesse.get().then(function(data) {
+    $scope.data = data;
+  }, function(reason) {
+    $scope.data = reason;
+  });
+});</code></pre>
+                    <a href="http://plnkr.co/edit/wo4DNu?p=preview" target="_blank">http://plnkr.co/edit/wo4DNu?p=preview</a>
+                    </section>
+                </section>
+                
+                
+                <section>
+                    <section>
+                        <h1>Les formulaires</h1> 
+                    </section>
+                    
+                    <section>
+                        <ul>
+                            <li>Validation de formulaire trés simple.</li>
+                            <li>Permet de fournir des indications visuelles à l'utilisateur.</li>
+                            <li>Permet de controler les données entrées par l'utilisateur.</li>
+                            <li>Ne dispense pas des validations serveurs evidemment!</li>
+                        </ul>
+                    </section>
+                    
+                    <section>
+                        <h2>Comment ça se passe?</h2>
+                        
+                        <ul>
+                        	<li>Grâce au pouvoir des directives, tous les éléments HTML du formulaire sont 'étendus' pa Angular:<br>
+                        	<code>form</code>, <code>input</code>, <code>button</code>,..</li>
+                        	<li>Ainsi que tous les attributs de validation HTML5:<br>
+                        	<code>required</code>, <code>min="4"</code>,..</li>
+                        	<li>En bonus, Angular ajoute des directives de validation: <code>ng-pattern="/^[a-zA-Z]+$/"</code>, <code>ng-maxlength=20</code>,..</li>
+                            <li>En méga bonus, vous pouvez créer vos propres directives de validation, y compris asynchrones!</li>
+                        </ul>
+                    </section>
+                    
+                    <section>
+                        <h2>Exemple</h2>
+                        
+                    	<pre><code>app.controller('MainController', function($scope) {
+  $scope.newUser = {
+    firstname: '',
+    lastname: '',
+    email: '',
+    website: ''
+  };
+  
+  $scope.createUser = function(user) {
+    alert('nouveau user valide prêt!');
+  };
+});</code></pre>
+                    	<pre><code><form name="registerForm" ng-submit="createUser(newUser)" novalidate>
+  <input name="prenom"    ng-model="newUser.firstname"   type="text" ng-minlength=4 required />
+  <input name="nom"       ng-model="newUser.lastname"    type="text" ng-minlength=4 required />
+  <input name="courriel"  ng-model="newUser.email"       type="email" required />
+  <input name="siteweb"   ng-model="newUser.website"     type="url" required />
+      
+  <button type="submit" ng-disabled="registerForm.$invalid">Envoyer</button>
+</form></code></pre>
+						<a href="http://plnkr.co/edit/0oFGvN?p=preview" target="_blank">http://plnkr.co/edit/0oFGvN?p=preview</a>
+                    </section>
+                    
+                    <section>
+                        <h2>Affichage des erreurs</h2>
+                        
+                        <p>Le formulaire et chaque champ ont des booléens assignés:</p>
+                        
+                        <ul>
+                        	<li><code>$dirty</code>: Champ ou formulaire déjà modifié.</li>
+                        	<li><code>$pristine</code>: Champ ou formulaire pas encore modifié.<br></li>
+                        	<li><code>$valid</code>: Champ ou formulaire valide.</li>
+                        	<li><code>$invalid</code>: Champ ou formulaire invalide.</li>
+                        	<li><code>$error</code>: Erreurs courante du champ ou formulaire.</li>
+                        </ul>
+                        
+                    	<pre><code>$scope.registerForm.$valid; /* true si formulaire valide */
+$scope.registerForm.nom.$invalid; /* true si champ nom n'est pas valide */
+$scope.registerForm.courriel.$dirty; /* true si champ courriel n'a pas encore été 'utilisé' */
+
+$scope.registerForm.prenom.$error.required; /* true si validation required du champ prenom non remplie */
+$scope.registerForm.courriel.$error.email; /* true si validation email du champ courriel non remplie */</code></pre>
+                    </section>
+                </section>
+                
+                
+                <section>
+                    <section>
+                        <h1>Le routing</h1>
+                    </section>
+                    
+                    <section>
+                        <ul>
+                            <li>Module <code>ngRoute</code> trés basique, pas de vue imbriquées..</li>
+                            <li>Ui-router, lib remplaçante trés poussée</li>
+                            <li>AngularJS 1.4 pour trés bientôt avec un nouveau router</li>
+                        </ul>
+                    </section>
                 </section>
                 
                 
                 
                 <section>
                     <section>
-	                    <h1>Le routing</h1>
+                        <h1>Les animations</h1> 
                     </section>
                     
                     <section>
-                    	<ul>
-		                    <li>Module <code>ngRoute</code> trés basique, pas de vue imbriquées..</li>
-		                    <li>Ui-router, lib remplaçante trés poussée</li>
-		                    <li>AngularJS 1.4 pour trés bientôt avec un nouveau router</li>
-                    	</ul>
-                    </section>
-                </section>
-                
-                
-                <section>
-                    <section>
-	                    <h1>Les formulaires</h1> 
-                    </section>
-                    
-                    <section>
-                    	<ul>
-		                    <li>Conçu pour CRUD donc gestion formulaires obligatoire</li>
-		                    <li>Details et démo ng-model, ngModelOptions et ngMessage</li>
-                    	</ul>
-                    </section>
-                </section>
-                
-                
-                <section>
-                    <section>
-                    	<h1>Les animations</h1> 
-                    </section>
-                    
-                    <section>
-	                    <p>Découplées et réutilisables</p>
-	                    <p>Animations CSS et JS supportées</p>
-	                    
-	                    <p>Ajout module ngAnimate</p>
-	                    <p>Ajoute des classes</p>
-	                    
-	                    
-	                    <p>Exemple</p>
-	                    <p>Animation CSS fait main</p>
-	                    <p>Animation CSS avec Animate.css</p>
-	                    <p>Animation JS avec GreenSock</p>
+                        <p>Découplées et réutilisables</p>
+                        <p>Animations CSS et JS supportées</p>
+                        
+                        <p>Ajout module ngAnimate</p>
+                        <p>Ajoute des classes</p>
+                        
+                        
+                        <p>Exemple</p>
+                        <p>Animation CSS fait main</p>
+                        <p>Animation CSS avec Animate.css</p>
+                        <p>Animation JS avec GreenSock</p>
                     </section>
                 </section>
                 
@@ -702,13 +1036,13 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                 
                 <section>
                     <section>
-                    	<h1>Les tests</h1>
+                        <h1>Les tests</h1>
                     </section>
                     
                     <section>
-	                    <p>Conçu pour pouvoir tester facilement</p>
-	                    <p>Tests unitaires: Karma (Application NodeJS pour faire tourner les tests) + Jasmine (Framework pour écrire les tests) + ngMock (module pour faire des mocks)</p>
-	                    <p>Tests E2E (End to End): Protractor</p>
+                        <p>Conçu pour pouvoir tester facilement</p>
+                        <p>Tests unitaires: Karma (Application NodeJS pour faire tourner les tests) + Jasmine (Framework pour écrire les tests) + ngMock (module pour faire des mocks)</p>
+                        <p>Tests E2E (End to End): Protractor</p>
                     </section>
                 </section>
                 
