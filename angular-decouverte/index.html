@@ -97,19 +97,17 @@
                         <h2>Plus maintenable</h2>
                         <ul>
                             <li>
-                                <p><code>#id</code> et <code>.class</code> ne sont plus utilisés dans le JS.</p>
                                 <p>Dans le code HTML, on a:</p>
                                 <ul>
-                                    <li class="fragment">Pour le CSS, on a les <code>#id</code> et <code>.class</code></li>
-                                    <li class="fragment">Pour le JS, on a les directives Angular ou personnalisées</li>
+                                    <li>Pour le CSS, on a les <code>#id</code> et <code>.class</code>.</li>
+                                    <li>Pour le JS, on a les directives Angular ou personnalisées.</li>
                                 </ul>
-                            </li>
-                            <li>
-                                <p class="fragment">CSS et JS ne sont plus liés du tout.</p>
-                                <p class="fragment">Aucun/moins de risque d'erreur de:</p>
+                            </li><br>
+                            <li class="fragment">
+                                <p>Aucun/moins de risque d'erreurs de:</p>
                                 <ul>
-                                    <li class="fragment">Casser des sélécteurs JS en travaillant sur le style</li>
-                                    <li class="fragment">Casser des sélécteurs CSS en travaillant sur le javascript</li>
+                                    <li>Casser des sélécteurs JS en travaillant sur le style.</li>
+                                    <li>Casser des sélécteurs CSS en travaillant sur le javascript.</li>
                                 </ul>
                             </li>
                         </ul>
@@ -125,9 +123,10 @@
                     
                     <section>
                         <ul>
-                            <li>Utilisation de nouvelles balises et attributs HTML</li>
-                            <li class="fragment">Angular parse le DOM et interpréte ces éléments</li>
-                            <li class="fragment">Pas de syntaxe de template spéciale, c'est du HTML!</li>
+                            <li>Utilisation de nouvelles balises et attributs HTML.</li>
+                            <li>Permet une compréhension de l'application plus simple.</li>
+                            <li>Angular parse le DOM et interpréte ces éléments.</li>
+                            <li>Pas de syntaxe de template spéciale, c'est du HTML!</li>
                         </ul>
                     </section>
                 </section>
@@ -338,10 +337,16 @@ app.controller('ChildController', function($scope) {
                                 <p>Bidirectionnel avec <code>ngModel</code>.</p>
                                 <pre><code><input ng-model="user.firstname" /></code></pre>
                             </li>
-                            <li class="fragment">Terminé les sélecteurs CSS dans le JS.</li>
-                            <li class="fragment">Evite de (trés) nombreuses lignes de code JS.</li>
-                            <li class="fragment">Surcouche qui évite un grand nombre d'erreurs.</li>
+                            <span class="fragment">
+                            <li>Terminé les sélecteurs CSS dans le JS.</li>
+                            <li>Evite de (trés) nombreuses lignes de code JS.</li>
+                            <li>Et donc d'erreurs.</li>
+                            </span>
                         </ul>
+                    </section>
+                    
+                    <section>
+                    	<iframe data-src="http://embed.plnkr.co/knLOBv/preview" width="600" height="200" style="border: 5px solid #000;"></iframe>
                     </section>
                 </section>
                 
@@ -1264,17 +1269,86 @@ form input {
                     </section>
                     
                     <section>
-                        <p>Découplées et réutilisables</p>
-                        <p>Animations CSS et JS supportées</p>
+                    	<ul>
+	                        <li>Découplées et réutilisables.</li>
+	                        <li>Animations CSS (transitions & keyframes) et JS supportées.</li>
+	                        <li>Utilisation du module <code>ngAnimate</code>.</li>
+                    	</ul>
+                    </section>
+                    
+                    <section>
+                        <h2>animations CSS</h2>
                         
-                        <p>Ajout module ngAnimate</p>
-                        <p>Ajoute des classes</p>
+                        <ul>
+	                        <li>Possibilité de coder soi même ses animations ou bien d'utiliser une librairie externe (<a href="http://daneden.github.io/animate.css/" target="_blank">animate.css</a> / <a href="https://h5bp.github.io/Effeckt.css/" target="_blank">Effeckt.css</a>).</li>
+	                        <li><code>ngAnimate</code> ajoute de classes CSS sur diférentes directives:</li>
+                        </ul>
                         
+                        <img data-src="images/animation.png"/>
                         
-                        <p>Exemple</p>
-                        <p>Animation CSS fait main</p>
-                        <p>Animation CSS avec Animate.css</p>
-                        <p>Animation JS avec GreenSock</p>
+                        <a href="https://docs.angularjs.org/guide/animations" target="_blank" class="credits-link">https://docs.angularjs.org/guide/animations</a>
+                    </section>
+                    
+                    <section>
+                    	<pre><code><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css" />
+<script src="https://code.angularjs.org/1.3.14/angular.js"></script>
+<script src="https://code.angularjs.org/1.3.14/angular-animate.js"></script></code></pre>
+                    	<pre><code>var app = angular.module('app', ['ngAnimate']);</code></pre>
+                    	<pre><code><button ng-init="showMe = true" ng-click="showMe = !showMe">Toggle display</button>
+                    	
+<h1 ng-hide="!showMe" class="myTitle">Hi guys !!!</h1></code></pre>
+                    	<pre><code>/* SASS */
+.myTitle.ng-hide-remove {
+  @include animation(0, 1s, rollIn); // zoomInDown bounceInLeft
+}
+.myTitle.ng-hide-add {
+  @include animation(0, 1s, rollOut); // zoomOutDown bounceOutRight
+}</code></pre>
+						<a href="http://plnkr.co/edit/IbgIcn?p=preview" target="_blank">http://plnkr.co/edit/IbgIcn?p=preview</a>
+                    </section>
+                    
+                    <section>
+                        <h2>animations JS</h2>
+                        
+                        <ul>
+	                        <li>Utilisation de librairie externe: <a href="http://api.jquery.com/animate/" target="_blank">jQuery</a>, <a href="http://greensock.com/" target="_blank">Greensock</a>, <a href="http://lvivski.com/anima/" target="_blank">Anima</a></li>
+	                        <li>Permet des animations complexes (<a href="http://plnkr.co/edit/ImKPGLly5PG5ZzGVEtna?p=preview" target="_blank">exemple</a>).</li>
+	                        <li>Utile pour supports mobiles.</li>
+                        </ul>
+                    </section>
+                    
+                    <section>
+                        
+                        <pre><code><button ng-init="showMe = true" ng-click="showMe = !showMe">Toggle display</button>
+<h1 ng-if="showMe" class="myTitle">Hi guys !!!</h1></code></pre>
+                        
+                        <pre><code>app.animation('.myTitle', function () {
+  return {
+    enter: function(element, done) {
+      element.css({
+        opacity: 0,
+        position: "relative",
+        top: '-50px'
+      })
+      .animate({
+        opacity: 1,
+        top: '0'
+        }, 500, done);
+    },
+    leave: function(element, done) {
+      element.css({
+        opacity: 1,
+        position: "relative"
+      })
+      .animate({
+        opacity: 0,
+        right: '100%'
+        }, 1000, done);
+    }
+  };
+});</code></pre>
+                        
+						<a href="http://plnkr.co/edit/dN3fpG?p=preview" target="_blank">http://plnkr.co/edit/dN3fpG?p=preview</a>
                     </section>
                 </section>
                 
@@ -1287,28 +1361,113 @@ form input {
                     </section>
                     
                     <section>
-                        <p>Conçu pour pouvoir tester facilement</p>
-                        <p>Tests unitaires: Karma (Application NodeJS pour faire tourner les tests) + Jasmine (Framework pour écrire les tests) + ngMock (module pour faire des mocks)</p>
-                        <p>Tests E2E (End to End): Protractor</p>
+                    	<h2>Angular a été pensé pour les tests</h2>
+                    	
+                    	<p>Tout est testable:<br>
+                    	<code>Controller</code>, <code>Services</code>, <code>Directives</code>, <code>Filter</code>,...<br>
+                    	et l'application dans sa globalité!</p>
+                    </section>
+                    
+                    <section>
+                 		<h2>Deux types de tests:</h2>
+                    	
+                    	<ul>
+                    		<li>les tests unitaires.</li>
+                    		<li>les tests d’intégration dits tests End-to-End (E2E).</li>
+                    	</ul>
+                    </section>
+                    
+                    <section>
+                    	<h2>Tests unitaires</h2>
+                        
+                        <p>L'application est composé de modules, eux-même composés de <code>Controller</code>, <code>Services</code>, <code>Directives</code>, <code>Filter</code>.</p>
+                        <p>Toutes ces briques communiquent entre elles par le biais d'une API publique et se comportent comme des boites noires.</p>
+                        <p>Les tests unitaires vérifient ces API publiques.</p>
+                    </section>
+                    
+                    <section>
+						<p>Possibilité de faire du TDD.</p>
+                    	
+                    	<p>Les outils:</p>
+                    	
+                    	<ul>
+                    		<li><code>Karma</code>: Application NodeJS pour faire tourner les tests.</li>
+							<li><code>Jasmine</code>: Framework pour écrire les tests (ou <code>Mocha</code>).</li>
+							<li><code>ngMock</code>: Utilitaires et services spécial tests unitaires.</li>
+							<li><code>$httpBackend</code>: Service pour simuler <code>$http</code>.</li>
+                    	</ul>
+                    </section>
+                    
+                    <section>
+                    	<p>Tests d'un controlleur:</p>
+                    	
+                    	<pre><code>angular.module('monApp').controller('DashboardCtrl', function ($scope) {
+  $scope.score = 456585;
+});</code></pre>
+                    	<pre><code>describe('Tests du Controller: DashboardCtrl', function () {
+    var DashboardCtrl,
+        scope;
+ 
+    beforeEach(module('monApp'));
+ 
+    beforeEach(inject(function ($controller, $rootScope) {
+        scope = $rootScope.$new();
+        DashboardCtrl = $controller('DashboardCtrl', {
+            $scope : scope
+        });
+    }));
+ 
+    it('le score doit etre defini!', function () {
+        expect(scope.score).toBeDefined();
+        expect(scope.score).toBe(456585);
+    });
+});</code></pre>
+                    </section>
+                    
+                    <section>
+                    	<h2>Tests E2E avec Protrator</h2>
+                  
+                    	<ul>
+                    		<li>Famework dédié à AngularJS utilisant Node.js.</li>
+                    		<li>Choix des OS/navigateurs sur lesquel exécuter les tests.</li>
+                    		<li>Intéragi avec l'application comme un vrai utilisateur.</li>
+                    		<li>Possibilité de faire tourner les tests avec une tâche Grunt.</li>
+                    		<li>Fichiers à l'extension <code>.e2e.js</code>.</li>
+                    		<li>Combine outils puissants: <code>Selenium</code>, <code>webDriver</code>, <code>Jasmine</code>..</li>
+                    		<li>Peut tourner avec <code>PhantomJS</code> (headless browser).</li>
+                    	</ul>
+                    </section>
+                    
+                    <section>
+                    	<pre><code>// todo-spec.js
+
+describe('angularjs homepage todo list', function() {
+  it('should add a todo', function() {
+    browser.get('http://www.angularjs.org');
+
+    element(by.model('todoText')).sendKeys('write a protractor test');
+    element(by.css('[value="add"]')).click();
+
+    var todoList = element.all(by.repeater('todo in todos'));
+    expect(todoList.count()).toEqual(3);
+    expect(todoList.get(2).getText()).toEqual('write a protractor test');
+  });
+});</code></pre>
+                    	<pre><code>// conf.js
+
+exports.config = {
+  seleniumAddress: 'http://localhost:4444/wd/hub',
+  specs: ['todo-spec.js']
+};</code></pre>
+                    	<pre><code>// ligne de commande
+                    	
+protractor conf.js</code></pre>
+
+						<p>Chrome s'ouvre,  interactions, puis se ferme rapidement.</p>
+                    	<pre><code>1 test, 2 assertions, 0 failures</code></pre>
                     </section>
                 </section>
                 
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                <section>
-                    <h1>Les TE</h1>
-                    <iframe data-src="http://embed.plnkr.co/MOsXBm/preview" width="1000" height="700"></iframe>
-                </section>
-                
-            
-
             </div>
 
         </div>
