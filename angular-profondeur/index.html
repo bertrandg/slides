@@ -61,35 +61,35 @@
             <!-- Any section element inside of this container is displayed as a slide -->
             <div class="slides">
                 
-              	<section>
+                  <section>
                     <h1>Formation AngularJS</h1>
                     <h2>Framework en profondeur + outils</h2>
                     <small><a href="http://bertrandg.github.io/">Bertrand GAILLARD</a></small>
-              	</section>
+                  </section>
                 
-              	<section>
-	              	<section>
-	                    <h1>Digest cycle</h1>
-	              	</section>
-	              	
-	              	<section>
-	              		<ul>
-		                    <li>Secret du data-binding</li>
-		                    <li>Ce qui donne le coté "magique".</li>
-	              		</ul>
-	              	</section>
-	              	
-	              	<section>
-	              		<p>1. <code>expression</code> dans HTML = <code>watcher</code> ajouté au <code>scope</code>.</p>
-	              		
-	              		<pre><code><span>{{ 'variable = ' + maVar }}</span>
+                  <section>
+                      <section>
+                        <h1>Digest cycle</h1>
+                      </section>
+                      
+                      <section>
+                          <ul>
+                            <li>Secret du data-binding</li>
+                            <li>Ce qui donne le coté "magique".</li>
+                          </ul>
+                      </section>
+                      
+                      <section>
+                          <p>1. <code>expression</code> dans HTML = <code>watcher</code> ajouté au <code>scope</code>.</p>
+                          
+                          <pre><code><span>{{ 'variable = ' + maVar }}</span>
 
 <div ng-bind="getScore()"></div>
 
 <p ng-class="{'text-success': awesome, 'text-large': giant }"></p>
 
 <div ng-if="isTermsOk">...</div></code></pre>
-	              		<pre><code>// code explicatif non fonctionnel !!
+                          <pre><code>// code explicatif non fonctionnel !!
 
 $scope.$watch(function() {
   return $parse(" 'variable = ' + maVar ")($scope);
@@ -114,12 +114,12 @@ $scope.$watch(function() {
 }, function(newValue, oldValue) {
   // met à jour le DOM ('element.html()') en ajoutant ou supprimant les éléments enfants suivant si true/false.
 });</code></pre>
-	              	</section>
-	              	
-	              	<section>
-	              		<p>2. Quand un "digest cycle" tourne, les <code>expressions</code> sont parsées et si résultat différent du précédent, la fonction associée est lancée (dirty checking).</p>
-	              		
-	              		<pre><code>// code explicatif non fonctionnel !!
+                      </section>
+                      
+                      <section>
+                          <p>2. Quand un "digest cycle" tourne, les <code>expressions</code> sont parsées et si résultat différent du précédent, la fonction associée est lancée (dirty checking).</p>
+                          
+                          <pre><code>// code explicatif non fonctionnel !!
 var Scope = function() {
   this.$$watchers = [];
   
@@ -141,13 +141,13 @@ var Scope = function() {
   };
 }</code></pre>
                         <a href="https://www.youtube.com/watch?v=Mk2WwSxK218" target="_blank" class="credits-link">Matthieu Lux - ngEurope</a>
-	              	</section>
-	              	
-	              	
-	              	<section>
-	              		<p>3. Un "digest cycle" n'est jamais lancé par <code>$scope.$digest()</code> mais par <code>$scope.$apply()</code>.</p>
-	              		
-	              		<pre><code>// code explicatif non fonctionnel !!
+                      </section>
+                      
+                      
+                      <section>
+                          <p>3. Un "digest cycle" n'est jamais lancé par <code>$scope.$digest()</code> mais par <code>$scope.$apply()</code>.</p>
+                          
+                          <pre><code>// code explicatif non fonctionnel !!
 var Scope = function() {
   //....
   
@@ -159,11 +159,11 @@ var Scope = function() {
     }
   };
 }</code></pre>
-	              	</section>
-	              	
-	              	
-	              	<section>
-	              		<pre><code>app.controller('MainCtrl', function($scope, $timeout) {
+                      </section>
+                      
+                      
+                      <section>
+                          <pre><code>app.controller('MainCtrl', function($scope, $timeout) {
   $scope.myVar = 'titi';
   
   setTimeout(function() {
@@ -184,34 +184,34 @@ var Scope = function() {
   },6000);
   // > la vue sera mise à jour !
 });</code></pre>
-	              	</section>
-	              	
-	              	<section>
-	              		<p>Dans l'écosystéme Angular, le <code>$apply</code> est appelé frequemment sans qu'on le voit:</p><br>
-	              		<ul>
-	              			<li>Pour chaque interaction utilisateur:</br>
-	              				<code>ngClick</code>, <code>ngDblclick</code>, <code>ngMouseenter</code>, ...</li><br>
-	              			<li>Pour chaque opération asynchrone:<br>
-	              			<code>$timeout</code>, <code>$interval</code>, <code>$q</code>, <code>$http</code>, ...</li>
-	              		</ul>
-	              	</section>
-	              	
-	              	<section>
-	              		<p>A noter:</p>
-	              		
-	              		<ul>
-		              		<li>Bon code = peu/pas de <code>$apply</code>.</li>
-		              		<li>Le <code>$apply</code> est principalement utilisé pour intégration libraries externes à Angular.</li>
-		              		<li>Digest cycle = Digest loop car un cycle peut changer d'autres <code>watchers</code> (10 fois max).</li>
-	              		</ul>
-	              	</section>
-	              	
-	              	<section>
-	              		<ul>
-		              		<li>
-		              			<p>Possibilité de faire des <code>watchers</code> en JS:</p>
-		              			
-		              			<pre><code>app.controller('MainCtrl', function($scope) {
+                      </section>
+                      
+                      <section>
+                          <p>Dans l'écosystéme Angular, le <code>$apply</code> est appelé frequemment sans qu'on le voit:</p><br>
+                          <ul>
+                              <li>Pour chaque interaction utilisateur:</br>
+                                  <code>ngClick</code>, <code>ngDblclick</code>, <code>ngMouseenter</code>, ...</li><br>
+                              <li>Pour chaque opération asynchrone:<br>
+                              <code>$timeout</code>, <code>$interval</code>, <code>$q</code>, <code>$http</code>, ...</li>
+                          </ul>
+                      </section>
+                      
+                      <section>
+                          <p>A noter:</p>
+                          
+                          <ul>
+                              <li>Bon code = peu/pas de <code>$apply</code>.</li>
+                              <li>Le <code>$apply</code> est principalement utilisé pour intégration libraries externes à Angular.</li>
+                              <li>Digest cycle = Digest loop car un cycle peut changer d'autres <code>watchers</code> (10 fois max).</li>
+                          </ul>
+                      </section>
+                      
+                      <section>
+                          <ul>
+                              <li>
+                                  <p>Possibilité de faire des <code>watchers</code> en JS:</p>
+                                  
+                                  <pre><code>app.controller('MainCtrl', function($scope) {
   $scope.myVar = 'titi';
   
   $scope.$watch(function() {
@@ -220,15 +220,18 @@ var Scope = function() {
     // la variable myVar vient de changer !
   });
   
-  $scope.$watch('myVar', function(newValue, oldValue) {
+  var unbinder = $scope.$watch('myVar', function(newValue, oldValue) {
     // la variable myVar vient de changer !
   });
   
+  // plus tard, on supprime le watcher:
+  unbinder();
+  
 });</code></pre>
-		              		</li>
-	              		</ul>
-	              	</section>
-              	</section>
+                              </li>
+                          </ul>
+                      </section>
+                  </section>
                 
                 <section>
                     <section>
@@ -481,66 +484,321 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                         
                 </section>
                 
-              	<section>
-	              	<section>
-	                    <h1>L'authentification</h1>
-	              	</section>
-	              	
-	              	<section>
-	                    <h2>Types d'authentification</h2>
-	                    
-	                    <ul>
-	                    	<li>Cookie</li>
-	                    	<li>WSSE</li>
-	                    	<li>JWT (JSON Web Token)</li>
-	                    </ul>
-	              	</section>
-	              	
-	              	<section>
-	              		<h2>REST doit être sans état (stateless)</h2>
-	              		
-	              		<blockquote>Chaque requête d’un client vers un serveur doit contenir toute l’information nécessaire pour permettre au serveur de comprendre la requête, sans avoir à dépendre d’un contexte conservé sur le serveur. Cela libère de nombreuses interactions entre le client et le serveur.</blockquote>
-	              	</section>
-	              	
-	              	<section>
-                    	<h2>COOKIE</h2>
-                    	
-                    	<p>Ajout d'un cookie avec un ID de session sur le navigateur de l'utilisateur aprés l'authentificaion.</p>
-                    	<p>Le serveur lit ce cookie à chaque requête suivante pour identifier l'utilisateur.</p>
-	              	</section>
-	              	
-	              	<section>
-                    	<h2>WSSE</h2>
-                    	
-                    	<p>Génération d'un "passwordDigest" coté client à partir du login + pwd + salt qui est ajouté à chaque requête REST.<br><br><a href="http://symfony.com/fr/doc/master/cookbook/security/custom_authentication_provider.html">Possibilité de faire nativement avec Symfony2</a></p>
-	              	</section>
-	              	
-	              	<section>
-                    	<h2>JWT (JSON Web Token)</h2>
-                    	
-                    	<p>Requête d'authentification qui retourne un "JWT access token" à durée limité qui est ajouté à chaque requête REST.<br><br><a href="https://github.com/lexik/LexikJWTAuthenticationBundle">Bundle Symfony2 LexikJWTAuthenticationBundle.</a></p>
-                    	
-                    	<p>Solution de plus en plus utilisée et trés bien pour client mobile.</p>
-	              	</section>
-              	</section>
+                  <section>
+                      <section>
+                        <h1>L'authentification</h1>
+                      </section>
+                      
+                      <section>
+                        <h2>Types d'authentification</h2>
+                        
+                        <ul>
+                            <li>Cookie</li>
+                            <li>WSSE</li>
+                            <li>JWT (JSON Web Token)</li>
+                        </ul>
+                      </section>
+                      
+                      <section>
+                          <h2>REST doit être sans état (stateless)</h2>
+                          
+                          <blockquote>Chaque requête d’un client vers un serveur doit contenir toute l’information nécessaire pour permettre au serveur de comprendre la requête, sans avoir à dépendre d’un contexte conservé sur le serveur. Cela libère de nombreuses interactions entre le client et le serveur.</blockquote>
+                      </section>
+                      
+                      <section>
+                        <h2>COOKIE</h2>
+                        
+                        <p>Ajout d'un cookie avec un ID de session sur le navigateur de l'utilisateur aprés l'authentificaion.</p>
+                        <p>Le serveur lit ce cookie à chaque requête suivante pour identifier l'utilisateur.</p>
+                      </section>
+                      
+                      <section>
+                        <h2>WSSE</h2>
+                        
+                        <p>Génération d'un "passwordDigest" coté client à partir du login + pwd + salt qui est ajouté à chaque requête REST.<br><br><a href="http://symfony.com/fr/doc/master/cookbook/security/custom_authentication_provider.html">Possibilité de faire nativement avec Symfony2</a></p>
+                      </section>
+                      
+                      <section>
+                        <h2>JWT (JSON Web Token)</h2>
+                        
+                        <p>Requête d'authentification qui retourne un "JWT access token" à durée limité qui est ajouté à chaque requête REST.<br><br><a href="https://github.com/lexik/LexikJWTAuthenticationBundle">Bundle Symfony2 LexikJWTAuthenticationBundle.</a></p>
+                        
+                        <p>Solution de plus en plus utilisée et trés bien pour client mobile.</p>
+                      </section>
+                  </section>
                 
-              	<section>
-	              	<section>
-	                    <h1>Les performances</h1>
-	              	</section>
-              	</section>
+                  <section>
+                      <section>
+                        <h1>Les performances</h1>
+                      </section>
+                      
+                      <section>
+                        <ul>
+                            <li>Limiter le nombre de <code>watchers</code> (scroll infini,..) en découpant son application.</li>
+                            <li>Limiter les <code>watchers</code> sur les tableaux.</li>
+                            <li>Utiliser <code>ngRepeat</code> avec 'track by'.</li>
+                            <li>Différence entre <code>ngIf</code> / <code>ngSwitch</code> et <code>ngShow</code> / <code>ngHide</code>.</li>
+                            <li>Limiter l'utilisation des <code>filters</code>.</li>
+                        </ul>
+                      </section>
+                      
+                      <section>
+                        <ul>
+                            <li>Utiliser le 'one-time binding' le plus souvent possible.<br><pre><code><h1>{{ ::title }}</h1>
+<p ng-bind="::getScore()"></p></code></pre></li>
+                            <li>Possibilité d'utiliser <code>$scope.$digest()</code> au lieu de <code>$scope.$apply()</code>. [Avec précaution!]<br>
+                            Le digest cycle parcourera seulement le <code>scope</code> courant et ses descendants au lieu de toute l'application.</li>
+                        </ul>
+                      </section>
+                  </section>
                 
-              	<section>
-	              	<section>
-	                    <h1>Les outils</h1>
-	              	</section>
-              	</section>
+                  <section>
+                      <section>
+                        <h1>Librairies indispensables</h1>
+                      </section>
+                      
+                      <section>
+                        <ul>
+	                        <li>ui-router</li>
+	                        <li>restangular</li>
+							<li>angular-translate</li>
+							<li>ui-bootstrap</li>
+							<li>angular-strap</li>
+							<li>angular-http-auth</li>
+							<li>ngAutoComplete</li>
+							<li>...</li>
+						</ul>
+                        <p>Plus sur <a href="http://ngmodules.org/" target="_blank">ngmodules.org</a></p>
+                      </section>
+                  </section>
                 
-              	<section>
-	              	<section>
-	                    <h1>L'organisation</h1>
-	              	</section>
-              	</section>
+                  <section>
+                      <section>
+                        <h1>Les outils</h1>
+                      </section>
+                          
+                      <section>
+                        <h2>Bower</h2>
+                        
+                        <p>Equivalent de <code>Composer</code> pour les libraires front.</p>
+                        
+                        <pre><code>
+bower init                              // démarrage d'un projet bower
+bower install jquery --save             // installation nouvelle librairie front
+bower install jquery#2.15.5 --save      // installation d'une version spécifique
+bower uninstall restangular --save      // desinstallation une librairie
+bower list [--offline] [--paths]        // listing des librairies installées
+bower search bxslider                   // recherche d'une librairie
+bower update angular --save             // mise à jour d'une librairie déjà installé
+bower info angular-google-maps          // liste les versions disponibles
+bower cache clean                       // suppression cache bower</code></pre>
+                      </section>
+                          
+                      <section>
+                        <h2>SASS</h2>
+                        
+                        <ul>
+                            <li>Méta-langage utilisé pour générer des feuilles de style au format CSS.</li>
+                            <li>Utilisation de variables, <code>mixins</code>, imbrication,..</li>
+                            <li>Pas indispensable mais indispensable!</li>
+                            <li><code>Compass</code> est une librairie SASS comprenant de nombreux <code>mixins</code>.</li>
+                        </ul>
+                      </section>
+                          
+                      <section>
+                          <pre><code>@mixin box-shadow($properties...) {
+  -moz-box-shadow: $properties;
+  -webkit-box-shadow: $properties;
+  -o-box-shadow: $properties;
+  box-shadow: $properties;
+}
+    
+$color_start: #f5f3f4;
+$color_hover_start: #F4F4F4;
+
+@for $i from 0 through 15 {
+  $darken_value: min(($i + 1) * 6, 100);
+  $darken_value_more: min($darken_value + 8, 100);
+  $darken_value_more_more: min($darken_value + 20, 100);
+  
+  &.level-#{$i} {
+    background: darken($color_start, $darken_value);
+    border: 1px solid darken($color_start, $darken_value_more);
+    @include box-shadow(inset 0px 0px 10px 0px darken($color_start, $darken_value_more_more));
+    
+    &:hover {
+      border-color: #666666;
+    }
+        
+    .options {
+      border-bottom: 1px solid darken($color_start, $darken_value_more);
+    }
+  }
+}</code></pre>
+                      
+                          <pre><code style="height: 220px;">.level-0 {
+  background: #e7e2e5;
+  border: 1px solid #d5ccd0;
+  -moz-box-shadow: inset 0px 0px 10px 0px #b9abb2;
+  -webkit-box-shadow: inset 0px 0px 10px 0px #b9abb2;
+  -o-box-shadow: inset 0px 0px 10px 0px #b9abb2;
+  box-shadow: inset 0px 0px 10px 0px #b9abb2; }
+  .level-0:hover {
+    border-color: #666666; }
+  .level-0 .options {
+    border-bottom: 1px solid #d5ccd0; }
+
+.level-1 {
+  background: #d9d2d5;
+  border: 1px solid #c7bbc1;
+  -moz-box-shadow: inset 0px 0px 10px 0px #ab9aa2;
+  -webkit-box-shadow: inset 0px 0px 10px 0px #ab9aa2;
+  -o-box-shadow: inset 0px 0px 10px 0px #ab9aa2;
+  box-shadow: inset 0px 0px 10px 0px #ab9aa2; }
+  .level-1:hover {
+    border-color: #666666; }
+  .level-1 .options {
+    border-bottom: 1px solid #c7bbc1; }
+
+.level-2 {
+  background: #cbc1c6;
+  border: 1px solid #b9abb2;
+  -moz-box-shadow: inset 0px 0px 10px 0px #9d8993;
+  -webkit-box-shadow: inset 0px 0px 10px 0px #9d8993;
+  -o-box-shadow: inset 0px 0px 10px 0px #9d8993;
+  box-shadow: inset 0px 0px 10px 0px #9d8993; }
+  .level-2:hover {
+    border-color: #666666; }
+  .level-2 .options {
+    border-bottom: 1px solid #b9abb2; }
+
+.level-3 {
+  background: #bdb0b7;
+  border: 1px solid #ab9aa2;
+  -moz-box-shadow: inset 0px 0px 10px 0px #8f7984;
+  -webkit-box-shadow: inset 0px 0px 10px 0px #8f7984;
+  -o-box-shadow: inset 0px 0px 10px 0px #8f7984;
+  box-shadow: inset 0px 0px 10px 0px #8f7984; }
+  .level-3:hover {
+    border-color: #666666; }
+  .level-3 .options {
+    border-bottom: 1px solid #ab9aa2; }
+
+.level-4 {
+  background: #afa0a8;
+  border: 1px solid #9d8993;
+  -moz-box-shadow: inset 0px 0px 10px 0px #7f6a75;
+  -webkit-box-shadow: inset 0px 0px 10px 0px #7f6a75;
+  -o-box-shadow: inset 0px 0px 10px 0px #7f6a75;
+  box-shadow: inset 0px 0px 10px 0px #7f6a75; }
+  .level-4:hover {
+    border-color: #666666; }
+  .level-4 .options {
+    border-bottom: 1px solid #9d8993; }
+    
+...</code></pre>
+                      </section>
+                          
+                      <section>
+                        <h2>Grunt</h2>
+                        
+                        <ul>
+                        	<li>Exécuteur de tâches écrit en JS.</li>
+                        	<li>Fonctionne avec NodeJS.</li>
+                        	<li>Permet de faire absolument tout!</li>
+                        	<li>4403 tâches sur <a href="http://gruntjs.com/plugins" target="_blank">gruntjs.com</a></li>
+                        	<li>Utile pendant le développement pour éxecuter les tâches répétitives et pour la production.</li>
+                        	<li>Paramètrage du fichier <code>Gruntfile.js</code></li>
+                        </ul>
+                      </section>
+                          
+                      <section>
+                        <h2>Tâches Grunt indispensables</h2>
+                        
+                      </section>
+                          
+                      <section>
+                        <p><a href="https://github.com/gruntjs/grunt-contrib-concat" target="_blank">grunt-contrib-concat</a></p>
+                        <p>Concaténer des fichiers en un seul (JS,..).</p>
+                      </section>
+                          
+                      <section>
+                        <p><a href="https://github.com/gruntjs/grunt-contrib-copy" target="_blank">grunt-contrib-copy</a></p>
+                        <p>Copier des fichiers (fonts, templates,..).</p>
+                      </section>
+                          
+                      <section>
+                        <p><a href="https://github.com/mzgol/grunt-ng-annotate" target="_blank">grunt-ng-annotate</a></p>
+                        <p>Réécrie toutes les injections de dépendance pour la minification.</p>
+                        
+                        <pre><code>app.controller('MainCtrl', function($scope, MyCustomService) {
+  /* code du controlleur */
+});
+
+
+app.controller('MainCtrl', ['$scope', 'MyCustomService', function($scope, MyCustomService) {
+  /* code du controlleur */
+}]);
+
+
+function MainCtrl($scope, MyCustomService) {
+  /* code du controlleur */
+}
+MainCtrl.$inject = ['$scope', 'MyCustomService'];
+app.controller('MainCtrl', MainCtrl);</code></pre>
+                      </section>
+                          
+                      <section>
+                        <p><a href="https://github.com/gruntjs/grunt-contrib-uglify" target="_blank">grunt-contrib-uglify</a></p>
+                        <p>Uglify un/des fichiers JS.</p>
+                      </section>
+                          
+                      <section>
+                        <p><a href="https://github.com/gruntjs/grunt-contrib-sass" target="_blank">grunt-contrib-sass</a></p>
+                        <p>Compile ses fichiers SASS en CSS.</p>
+                      </section>
+                          
+                      <section>
+                        <p><a href="https://github.com/gruntjs/grunt-contrib-cssmin" target="_blank">grunt-contrib-cssmin</a></p>
+                        <p>Minifie un/des CSS.</p>
+                      </section>
+                          
+                      <section>
+                        <p><a href="https://github.com/ericclemmons/grunt-angular-templates" target="_blank">grunt-angular-templates</a></p>
+                        <p>Minifie les templates HTML angular et les insert directement dans <code>$templateCache</code>.<br>Evite de nombreuses requêtes ajax.</p>
+                        
+                        <pre><code>app.run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/app/templates/page1.tpl.html",
+    "<div><h1>Page1: {{ myVar }}</h1></div>"
+  );
+  $templateCache.put("src/app/templates/page2.tpl.html",
+    "<div><h1>Page2: {{ myVar }}</h1></div>"
+  );
+}]);</code></pre>
+                      </section>
+                          
+                      <section>
+                        <p><a href="https://github.com/gruntjs/grunt-contrib-watch" target="_blank">grunt-contrib-watch</a></p>
+                        <p>Tourne en tâche de fond et exécute d'autres tâches quand certains fichiers sont modifiés.</p>
+                        <br>
+                        <p>Exemples d'utilisation classique:</p>
+                        <ul>
+                        	<li>Concaténer tous les fichiers JS dés qu'un fichier JS est modifié.</li>
+                        	<li>Générer un fichier CSS dés qu'un fichier SCSS est modifié.</li>
+                        	<li>...</li>
+                        </ul>
+                      </section>
+                          
+                      <section>
+                        <p>A vous de créer vos propres tâches qui sont des enchainements des autres tâches.</p>
+                      </section>
+                  </section>
+                
+                  <section>
+                      <section>
+                        <h1>L'organisation</h1>
+                      </section>
+                  </section>
 
             </div>
         </div>
