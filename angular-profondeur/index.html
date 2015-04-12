@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Formation AngularJS - Framework en profondeur + outils</title>
+
+        <meta name="description" content="Framework en profondeur + outils">
+        <meta name="author" content="Bertrand Gaillard">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/beige.css" id="theme">
+
+        <!-- Code syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <style>
+        .reveal pre code {
+            //max-height: 500px;
+        }
+        .reveal blockquote {
+            width: 90%;
+        }
+        .reveal pre {
+            font-size: .45em;
+        }
+        .reveal p > code,
+        .reveal blockquote > code,
+        .reveal li > code {
+            color: #8b743d;
+        }
+        .reveal .credits-link {
+            font-size: .35em;
+            display: block;
+        }
+        </style>
+
+        <div class="reveal">
+
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+                
+              	<section>
+                    <h1>Formation AngularJS</h1>
+                    <h2>Framework en profondeur + outils</h2>
+                    <small><a href="http://bertrandg.github.io/">Bertrand GAILLARD</a></small>
+              	</section>
+                
+              	<section>
+	              	<section>
+	                    <h1>Digest cycle</h1>
+	              	</section>
+	              	
+	              	<section>
+	              		<ul>
+		                    <li>Secret du data-binding</li>
+		                    <li>Ce qui donne le coté "magique".</li>
+	              		</ul>
+	              	</section>
+	              	
+	              	<section>
+	              		<p>1. <code>expression</code> dans HTML = <code>watcher</code> ajouté au <code>scope</code>.</p>
+	              		
+	              		<pre><code><span>{{ 'variable = ' + maVar }}</span>
+
+<div ng-bind="getScore()"></div>
+
+<p ng-class="{'text-success': awesome, 'text-large': giant }"></p>
+
+<div ng-if="isTermsOk">...</div></code></pre>
+	              		<pre><code>// code explicatif non fonctionnel !!
+
+$scope.$watch(function() {
+  return $parse(" 'variable = ' + maVar ")($scope);
+}, function(newValue, oldValue) {
+  // met à jour le contenu de l'élément du DOM ('element.text()') avec nouvelle valeur.
+});
+
+$scope.$watch(function() {
+  return $parse(" getScore() ")($scope);
+}, function(newValue, oldValue) {
+  // met à jour le contenu de l'élément du DOM ('element.text()') avec nouvelle valeur.
+});
+
+$scope.$watch(function() {
+  return $parse(" {'text-success': awesome, 'text-large': giant } ")($scope);
+}, function(newValue, oldValue) {
+  // met à jour les classes de l'élément du DOM ('element.addClass()' / 'element.removeClass()') avec nouvelle valeur.
+});
+
+$scope.$watch(function() {
+  return $parse(" isTermsOk ")($scope);
+}, function(newValue, oldValue) {
+  // met à jour le DOM ('element.html()') en ajoutant ou supprimant les éléments enfants suivant si true/false.
+});</code></pre>
+	              	</section>
+	              	
+	              	<section>
+	              		<p>2. Quand un "digest cycle" tourne, les <code>expressions</code> sont parsées et si résultat différent du précédent, la fonction associée est lancée (dirty checking).</p>
+	              		
+	              		<pre><code>// code explicatif non fonctionnel !!
+var Scope = function() {
+  this.$$watchers = [];
+  
+  this.$watch = function(watcherFn, listenerFn) {
+    this.$$watchers.push({
+      watcherFn: watcherFn,
+      listenerFn: listenerFn
+    });
+  };
+  this.$digest = function() {
+    this.$$watchers.foreach(function(watcher) {
+      var newValue = watcher.watcherFn();
+      var oldValue = watcher.last;
+      if(newValue !== oldValue) {
+        watcher.listenerFn(newValue, oldValue);
+        watcher.last = newValue;
+      }
+    });
+  };
+}</code></pre>
+                        <a href="https://www.youtube.com/watch?v=Mk2WwSxK218" target="_blank" class="credits-link">Matthieu Lux - ngEurope</a>
+	              	</section>
+	              	
+	              	
+	              	<section>
+	              		<p>3. Un "digest cycle" n'est jamais lancé par <code>$scope.$digest()</code> mais par <code>$scope.$apply()</code>.</p>
+	              		
+	              		<pre><code>// code explicatif non fonctionnel !!
+var Scope = function() {
+  //....
+  
+  this.$apply = function(exprFn) {
+    try {
+      exprFn();
+    } finally {
+      this.$digest();
+    }
+  };
+}</code></pre>
+	              	</section>
+	              	
+	              	
+	              	<section>
+	              		<pre><code>app.controller('MainCtrl', function($scope, $timeout) {
+  $scope.myVar = 'titi';
+  
+  setTimeout(function() {
+    $scope.myVar = 'toto';
+  }, 2000);
+  // > la vue ne sera pas mise à jour..
+  // Angular n'est pas averti de la maj !
+  
+  setTimeout(function() {
+    $scope.$apply(function() {
+      $scope.myVar = 'toto';
+    });
+  }, 4000);
+  // > la vue sera mise à jour !
+  
+  $timeout(function() {
+    $scope.myVar = 'toto';
+  },6000);
+  // > la vue sera mise à jour !
+});</code></pre>
+	              	</section>
+	              	
+	              	<section>
+	              		<p>Dans l'écosystéme Angular, le <code>$apply</code> est appelé frequemment sans qu'on le voit:</p><br>
+	              		<ul>
+	              			<li>Pour chaque interaction utilisateur:</br>
+	              				<code>ngClick</code>, <code>ngDblclick</code>, <code>ngMouseenter</code>, ...</li><br>
+	              			<li>Pour chaque opération asynchrone:<br>
+	              			<code>$timeout</code>, <code>$interval</code>, <code>$q</code>, <code>$http</code>, ...</li>
+	              		</ul>
+	              	</section>
+	              	
+	              	<section>
+	              		<p>A noter:</p>
+	              		
+	              		<ul>
+		              		<li>Bon code = peu/pas de <code>$apply</code>.</li>
+		              		<li>Le <code>$apply</code> est principalement utilisé pour intégration libraries externes à Angular.</li>
+		              		<li>Digest cycle = Digest loop car un cycle peut changer d'autres <code>watchers</code> (10 fois max).</li>
+	              		</ul>
+	              	</section>
+	              	
+	              	<section>
+	              		<ul>
+		              		<li>
+		              			<p>Possibilité de faire des <code>watchers</code> en JS:</p>
+		              			
+		              			<pre><code>app.controller('MainCtrl', function($scope) {
+  $scope.myVar = 'titi';
+  
+  $scope.$watch(function() {
+    return $scope.myVar;
+  }, function(newValue, oldValue) {
+    // la variable myVar vient de changer !
+  });
+  
+  $scope.$watch('myVar', function(newValue, oldValue) {
+    // la variable myVar vient de changer !
+  });
+  
+});</code></pre>
+		              		</li>
+	              		</ul>
+	              	</section>
+              	</section>
+                
+                <section>
+                    <section>
+                        <h1>Les services</h1>
+                    </section>
+                        
+                    <section>
+                        <ul>
+                            <li>Un service = simple objet JS avec propriétés et méthodes.</li>
+                            <li>Utilise l'injection de dépendances.</li>
+                            <li>Créé une seule fois lors du premier appel (Singleton).</li>
+                            <li>Réutilisé lors des suivants pour toute la durée de vie de la SPA.</li>
+                            <li>Accessible de partout quelque soit le module sur lequel ils sont créés ou appelés.</li>
+                            <li>Peut être injecté dans <code>controllers</code>, <code>filtres</code>, <code>services</code>,..</li>
+                            <li>Utilisation à volonté pour alléger au maximum les controlleurs.</li>
+                        </ul>
+                    </section>
+                    
+                    <section>
+                        <h2>Fonctionnement interne de DI</h2>
+                        <ul>
+                            <li>Chaque service vient avec un provider qui sert à le créer.</li>
+                            <li>A l'initialisation d'un module, tous les providers des services sont réferencés.</li>
+                            <li>C'est seulement lors de sa première injection que l'instance du service est créée grâce à son provider.</li>
+                            <li>Lors des injections suivantes, Angular fournit directement l'instance, plus besoin du provider.</li>
+                        </ul>
+                        
+                        <blockquote>Dans la pratique, chaque provider posséde une méthode <code>$get</code> qui retourne l'instance et peut comporter des propriétés ou méthodes servant à configurer l'instanciation du service associé.</blockquote>
+                    </section>
+                    
+                    <section>
+                        <h2>Différentes déclarations de services</h2>
+                        <p>Il existe 5 méthodes pour déclarer un service mais dans tous les cas, ils s'injectent et s'utilisent de la même manière et il en existe toujours une seule instance.</p>
+                        <ul>
+                            <li>module.provider()</li>
+                            <li>module.factory()</li>
+                            <li>module.service()</li>
+                            <li>module.value()</li>
+                            <li>module.constant()</li>
+                        </ul>
+                        <p><code>factory()</code> et <code>service()</code> sont juste des manières plus simples d’écrire un <code>provider()</code>.</p>
+                    </section>
+                    
+                    <section>
+                        <h2>1/5: PROVIDER()</h2>
+                        <ul>
+                            <li>Permet de paramétrer le service au démarrage du module.</li>
+                            <li>Fonction <code>$get</code> obligatoire retournant l'instance du service.</li>
+                        </ul>
+                    
+                        <pre><code>var app = angular.module('myapp');
+                        
+app.provider('MyService', function() {
+    var scale = 1;
+    
+    this.setScale = function(newScale) {
+      scale = newScale;
+    };
+    
+    this.$get = function ($window) {
+        return {
+            getScreenWidth: function() {
+                return $window.innerWidth * scale;
+            },
+            getScreenHeight: function() {
+                return $window.innerHeight * scale;
+            }
+        };
+    };
+});
+
+app.config(function(MyServiceProvider) {
+  MyServiceProvider.setScale(10);
+});
+
+app.controller('AppCtrl', function($scope, MyService) {
+  var _width = MyService.getScreenWidth();
+});</code></pre>
+                    </section>
+                    
+                    <section>
+                        <h2>2/5: FACTORY()</h2>
+                        <ul>
+                            <li>Simplification de la méthode <code>provider()</code>.</li>
+                            <li>Equivalent à la méthode <code>$get</code> précédente.</li>
+                            <li>Provider automatiquement créé par Angular.</li>
+                        </ul>
+                        
+                        <pre><code>app.factory('MyService', function($window) {
+    var scale = 1;
+    
+    return {
+        getScreenWidth: function() {
+            return $window.innerWidth * scale;
+        },
+        getScreenHeight: function() {
+            return $window.innerHeight * scale;
+        }
+    };
+});
+
+app.controller('AppCtrl', function($scope, MyService) {
+  var _width = MyService.getScreenWidth();
+});</code></pre>
+                    </section>
+                    
+                    <section>
+                        <h2>3/5: SERVICE()</h2>
+                        <ul>
+                            <li>Simplification de la méthode <code>provider()</code>.</li>
+                            <li>Fonction directement instanciée avec un <code>new</code> pour créer l'instance du service.</li>
+                            <li>Pas besoin de <code>return</code> un objet, tout ce qui est attaché à <code>this</code> sera accessible par le biais du service.</li>
+                        </ul>
+                        
+                        <pre><code>app.service('MyService', function($window) {
+    var scale = 1;
+    
+    this.getScreenWidth = function() {
+        return $window.innerWidth * scale;
+    };
+    
+    this.getScreenHeight = function() {
+        return $window.innerHeight * scale;
+    }
+});
+
+app.controller('AppCtrl', function($scope, MyService) {
+  var _width = MyService.getScreenWidth();
+});</code></pre>
+                    </section>
+                    
+                    <section>
+                        <h2>4/5: VALUE()</h2>
+                        <ul>
+                            <li>Stocker un objet JS de type <code>object</code> ou bien de type primitif (<code>booléen</code>, <code>string</code>, <code>number</code>).</li>
+                            <li>Inaccessible par les <code>provider</code> lors de la phase de configuration du module.</li>
+                            <li>Peut être modifié pendant l'éxecution de l'application.</li>
+                            <li>Impossible d'utiliser l'injection de dépendances pour utiliser d'autres services.</li>
+                        </ul>
+                        
+                        <pre><code>app.value('GoogleMapAPI_KEY', '5VUhR4kqvVvhXRH4BIAN')
+
+app.value('VideoData', {
+    title: 'Ters Akan şelale!',
+    description: 'Bu işte bir yanlışlık var diye İngiltere',
+    url: 'http://www.dailymotion.com/video/x28i2n3_ters-akan-selale_news'
+})
+
+app.controller('AppCtrl', function($scope, VideoData) {
+  $scope.video = VideoData;
+});
+</code></pre>
+                    </section>
+                    
+                    <section>
+                        <h2>5/5: CONSTANT()</h2>
+                        <ul>
+                            <li>Fonctionne comme <code>value()</code> mais est accessible lors de la phase de configuration du module.</li>
+                            <li>Malgré leur nom, elles peuvent être modifiée.</li>
+                        </ul>
+                        
+                        <pre><code>app.constant('UselessData', {
+    scale: 42
+});
+
+app.config(function(MyServiceProvider, UselessData) {
+  MyServiceProvider.setScale(UselessData.scale);
+});
+
+app.controller('AppCtrl', function($scope, UselessData) {
+  $scope.scale = UselessData.scale;
+});
+</code></pre>
+                    </section>
+                    
+                    <section>
+                    <h2>Exemple de déclaration de services:</h2>
+                    
+<pre><code>playerApp.value('Params', {
+  URL_API: 'https://api.dailymotion.com/videos',
+  URL_EMBED: 'http://www.dailymotion.com/embed/video',
+  VIDEOS_PER_PAGE: 12,
+  VIDEOS_AUTOPLAY: true,
+});
+
+playerApp.factory('Dailymotion', function($http, $sce, Params) {
+  var getApiUrl = function(terms, page) {
+      var api_params =  '?fields=id,title,description,duration_formatted,created_time&sort=relevance';
+      var api_limit =   '&limit=' + Params.VIDEOS_PER_PAGE;
+      var api_page =    '&page=' + page;
+      var api_search =  '&search=' + terms.split(' ').join('+');
+      var api_jsonp =   '&callback=JSON_CALLBACK';
+    
+    return Params.URL_API + api_params + api_limit + api_page + api_search + api_jsonp;
+  };
+  
+  var Service = {
+    getResults: function(terms, page) {
+      return $http({
+        method: 'JSONP',
+        url: getApiUrl(terms, page),
+        cache: true,
+        transformResponse: function (data, headers) {
+          data.nbPages = Math.ceil(data.total / data.limit);
+          return data;
+        }
+      });
+    },
+    
+    getIframeUrl: function(videoId) {
+          var url = Params.URL_EMBED + '/' + videoId + '?autoPlay=' + Params.VIDEOS_AUTOPLAY;
+          return $sce.trustAsResourceUrl(url);
+    }
+  };
+  
+  return Service;
+});</code></pre>
+                    </section>
+                        
+                        
+                    <section>
+                        <p>Exemple d'utilisation de services:</p>
+                        
+<pre><code>playerApp.controller('VideoPlayerModalCtrl', function($scope, $modalInstance, Dailymotion, video) {
+  $scope.video = video;
+  $scope.iframeUrl = Dailymotion.getIframeUrl(video.id);
+  
+  $scope.close = function () {
+    $modalInstance.close();
+  };
+});</code></pre>
+                        <blockquote>En pratique, <code>factory()</code> et <code>value()</code> sont utilisés dans la plupart du cas.</blockquote>
+                    </section>
+                        
+                        
+                    <section>
+                        <h2>Services fournis par AngularJS</h2>
+                        
+                        <p>$http, $location, $filter, $window, $timeout, $interval, $animate, $rootScope, $document,..</p>
+                        
+                        <ul>
+                            <li>Commencent tous par $ (conventions)</li>
+                            <li>Couche d'abstraction utile pour fonctionner dans l'écosystéme AngularJs et pour être mockée lors des tests.</li>
+                            <li><code>Providers</code> associés pour les configurer au démarrage:</li>
+                        </ul>
+                        
+                        <p>$httpProvider, $locationProvider, $filterProvider, $animateProvider, $rootScopeProvider,..</p>
+                        
+                    </section>
+                        
+                </section>
+                
+              	<section>
+	              	<section>
+	                    <h1>L'authentification</h1>
+	              	</section>
+	              	
+	              	<section>
+	                    <h2>Types d'authentification</h2>
+	                    
+	                    <ul>
+	                    	<li>Cookie</li>
+	                    	<li>WSSE</li>
+	                    	<li>JWT (JSON Web Token)</li>
+	                    </ul>
+	              	</section>
+	              	
+	              	<section>
+	              		<h2>REST doit être sans état (stateless)</h2>
+	              		
+	              		<blockquote>Chaque requête d’un client vers un serveur doit contenir toute l’information nécessaire pour permettre au serveur de comprendre la requête, sans avoir à dépendre d’un contexte conservé sur le serveur. Cela libère de nombreuses interactions entre le client et le serveur.</blockquote>
+	              	</section>
+	              	
+	              	<section>
+                    	<h2>COOKIE</h2>
+                    	
+                    	<p>Ajout d'un cookie avec un ID de session sur le navigateur de l'utilisateur aprés l'authentificaion.</p>
+                    	<p>Le serveur lit ce cookie à chaque requête suivante pour identifier l'utilisateur.</p>
+	              	</section>
+	              	
+	              	<section>
+                    	<h2>WSSE</h2>
+                    	
+                    	<p>Génération d'un "passwordDigest" coté client à partir du login + pwd + salt qui est ajouté à chaque requête REST.<br><br><a href="http://symfony.com/fr/doc/master/cookbook/security/custom_authentication_provider.html">Possibilité de faire nativement avec Symfony2</a></p>
+	              	</section>
+	              	
+	              	<section>
+                    	<h2>JWT (JSON Web Token)</h2>
+                    	
+                    	<p>Requête d'authentification qui retourne un "JWT access token" à durée limité qui est ajouté à chaque requête REST.<br><br><a href="https://github.com/lexik/LexikJWTAuthenticationBundle">Bundle Symfony2 LexikJWTAuthenticationBundle.</a></p>
+                    	
+                    	<p>Solution de plus en plus utilisée et trés bien pour client mobile.</p>
+	              	</section>
+              	</section>
+                
+              	<section>
+	              	<section>
+	                    <h1>Les performances</h1>
+	              	</section>
+              	</section>
+                
+              	<section>
+	              	<section>
+	                    <h1>Les outils</h1>
+	              	</section>
+              	</section>
+                
+              	<section>
+	              	<section>
+	                    <h1>L'organisation</h1>
+	              	</section>
+              	</section>
+
+            </div>
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+
+            // Full list of configuration options available at:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                //width: 1200,
+                //height: 900,
+                
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+
+                transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+                // Optional reveal.js plugins
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true },
+                    { src: 'plugin/notes/notes.js', async: true }
+                ]
+            });
+
+        </script>
+
+    </body>
+</html>

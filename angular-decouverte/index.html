@@ -318,6 +318,16 @@ app.controller('ChildController', function($scope) {
 });</code></pre>
                         <a href="http://plnkr.co/edit/am6IDw?p=preview" target="_blank">http://plnkr.co/edit/am6IDw?p=preview</a>
                     </section>
+                    
+                    <section>
+                    	<p>Angular aussi utilise des events:</p>
+                    	
+                    	<pre><code>app.controller('playerCtrl', function($scope) {
+  $scope.$on('$destroy', function(event) {
+    // controlleur sur le point d'être détruit, dernière volonté?
+  });
+});</code></pre>
+                    </section>
                 </section>
                 
                 
@@ -522,26 +532,14 @@ angular.module('myapp').run(function($http) {
                         
                     <section>
                         <ul>
-                            <li>Un service = simple objet JS avec propriétés et méthodes</li>
+                            <li>Un service = simple objet JS avec propriétés et méthodes.</li>
                             <li>Utilise l'injection de dépendances.</li>
                             <li>Créé une seule fois lors du premier appel (Singleton).</li>
                             <li>Réutilisé lors des suivants pour toute la durée de vie de la SPA.</li>
                             <li>Accessible de partout quelque soit le module sur lequel ils sont créés ou appelés.</li>
-                            <li>Peut être injecté dans controlleurs, filtres, services,..</li>
+                            <li>Peut être injecté dans <code>controllers</code>, <code>filtres</code>, <code>services</code>,..</li>
                             <li>Utilisation à volonté pour alléger au maximum les controlleurs.</li>
                         </ul>
-                    </section>
-                    
-                    <section>
-                        <h2>Fonctionnement interne de DI</h2>
-                        <ul>
-                            <li>Chaque service vient avec un provider qui sert à le créer.</li>
-                            <li>A l'initialisation d'un module, tous les providers des services sont réferencés.</li>
-                            <li>C'est seulement lors de sa première injection que l'instance du service est créée grâce à son provider.</li>
-                            <li>Lors des injections suivantes, Angular fournit directement l'instance, plus besoin du provider.</li>
-                        </ul>
-                        
-                        <blockquote>Dans la pratique, chaque provider posséde une méthode <code>$get</code> qui retourne l'instance et peut comporter des propriétés ou méthodes servant à configurer l'instanciation du service associé.</blockquote>
                     </section>
                     
                     <section>
@@ -554,52 +552,14 @@ angular.module('myapp').run(function($http) {
                             <li>module.value()</li>
                             <li>module.constant()</li>
                         </ul>
-                        <p><code>factory()</code> et <code>service()</code> sont juste des manières plus simples d’écrire un <code>provider()</code>.</p>
+                        <blockquote>En pratique, <code>factory()</code> et <code>value()</code> sont utilisés dans la plupart du cas.</blockquote>
                     </section>
                     
                     <section>
-                        <h2>1/5: PROVIDER()</h2>
+                        <h2>Méthode FACTORY()</h2>
                         <ul>
-                            <li>Permet de paramétrer le service au démarrage du module.</li>
-                            <li>Fonction <code>$get</code> obligatoire retournant l'instance du service.</li>
-                        </ul>
-                    
-                        <pre><code>var app = angular.module('myapp');
-                        
-app.provider('MyService', function() {
-    var scale = 1;
-    
-    this.setScale = function(newScale) {
-      scale = newScale;
-    };
-    
-    this.$get = function ($window) {
-        return {
-            getScreenWidth: function() {
-                return $window.innerWidth * scale;
-            },
-            getScreenHeight: function() {
-                return $window.innerHeight * scale;
-            }
-        };
-    };
-});
-
-app.config(function(MyServiceProvider) {
-  MyServiceProvider.setScale(10);
-});
-
-app.controller('AppCtrl', function($scope, MyService) {
-  var _width = MyService.getScreenWidth();
-});</code></pre>
-                    </section>
-                    
-                    <section>
-                        <h2>2/5: FACTORY()</h2>
-                        <ul>
-                            <li>Simplification de la méthode <code>provider()</code>.</li>
-                            <li>Equivalent à la méthode <code>$get</code> précédente.</li>
-                            <li>Provider automatiquement créé par Angular.</li>
+                            <li>Permet de créer une boite noire avec une API publique.</li>
+                            <li>Possibilité d'injecter et d'utiliser d'autres services.</li>
                         </ul>
                         
                         <pre><code>app.factory('MyService', function($window) {
@@ -621,35 +581,9 @@ app.controller('AppCtrl', function($scope, MyService) {
                     </section>
                     
                     <section>
-                        <h2>3/5: SERVICE()</h2>
-                        <ul>
-                            <li>Simplification de la méthode <code>provider()</code>.</li>
-                            <li>Fonction directement instanciée avec un <code>new</code> pour créer l'instance du service.</li>
-                            <li>Pas besoin de <code>return</code> un objet, tout ce qui est attaché à <code>this</code> sera accessible par le biais du service.</li>
-                        </ul>
-                        
-                        <pre><code>app.service('MyService', function($window) {
-    var scale = 1;
-    
-    this.getScreenWidth = function() {
-        return $window.innerWidth * scale;
-    };
-    
-    this.getScreenHeight = function() {
-        return $window.innerHeight * scale;
-    }
-});
-
-app.controller('AppCtrl', function($scope, MyService) {
-  var _width = MyService.getScreenWidth();
-});</code></pre>
-                    </section>
-                    
-                    <section>
-                        <h2>4/5: VALUE()</h2>
+                        <h2>Méthode VALUE()</h2>
                         <ul>
                             <li>Stocker un objet JS de type <code>object</code> ou bien de type primitif (<code>booléen</code>, <code>string</code>, <code>number</code>).</li>
-                            <li>Inaccessible par les <code>provider</code> lors de la phase de configuration du module.</li>
                             <li>Peut être modifié pendant l'éxecution de l'application.</li>
                             <li>Impossible d'utiliser l'injection de dépendances pour utiliser d'autres services.</li>
                         </ul>
@@ -664,27 +598,6 @@ app.value('VideoData', {
 
 app.controller('AppCtrl', function($scope, VideoData) {
   $scope.video = VideoData;
-});
-</code></pre>
-                    </section>
-                    
-                    <section>
-                        <h2>5/5: CONSTANT()</h2>
-                        <ul>
-                            <li>Fonctionne comme <code>value()</code> mais est accessible lors de la phase de configuration du module.</li>
-                            <li>Malgré leur nom, elles peuvent être modifiée.</li>
-                        </ul>
-                        
-                        <pre><code>app.constant('UselessData', {
-    scale: 42
-});
-
-app.config(function(MyServiceProvider, UselessData) {
-  MyServiceProvider.setScale(UselessData.scale);
-});
-
-app.controller('AppCtrl', function($scope, UselessData) {
-  $scope.scale = UselessData.scale;
 });
 </code></pre>
                     </section>
@@ -745,18 +658,17 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
     $modalInstance.close();
   };
 });</code></pre>
-                        <blockquote>En pratique, <code>factory()</code> et <code>value()</code> sont utilisés dans la plupart du cas.</blockquote>
                     </section>
                         
                         
                     <section>
                         <h2>Services fournis par AngularJS</h2>
                         
-                        <p>$http, $location, $filter, $window, $timeout, $interval, $animate, $rootScope, $document,..</p>
+                        <p><code>$http</code>, <code>$location</code>, <code>$filter</code>, <code>$window</code>, <code>$timeout</code>, <code>$interval</code>, <code>$animate</code>, <code>$rootScope</code>, <code>$document</code>,..</p>
                         
                         <ul>
-                            <li>Commencent tous par $ (conventions)</li>
-                            <li>Couche d'abstraction utile pour fonctionner dans l'écosystéme AngularJs et pour être mockée lors des tests.</li>
+                            <li>Commencent tous par $ (conventions).</li><br>
+                            <li>Couche d'abstraction utile pour fonctionner dans l'écosystéme AngularJs et pour être mockée lors des tests.</li><br>
                             <li><code>Providers</code> associés pour les configurer au démarrage:</li>
                         </ul>
                         
