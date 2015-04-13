@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
 
-        <title>Formation AngularJS - Directives en profondeur et outils</title>
+        <title>Formation AngularJS - Directives</title>
 
         <meta name="description" content="Formation AngularJS - Directives en profondeur et outils">
         <meta name="author" content="Bertrand Gaillard">
@@ -55,6 +55,11 @@
             display: block;
         }
         </style>
+        
+    	<a href="http://www.sapiens-rwd.fr/" target="_blank" style="display: block; position: absolute; bottom: 10px; left: 10px; z-index: 1000;">
+			<div style="background: url('images/rwd.png'); width: 110px; height: 110px; transform: scale(.7);" alt="Sapiens RWD"></div>
+        </a>
+        
 
         <div class="reveal">
 
@@ -64,7 +69,8 @@
                   <section>
                     <h1>Formation AngularJS</h1>
                     <h2>Directives</h2>
-                    <small><a href="http://bertrandg.github.io/">Bertrand GAILLARD</a></small>
+                    <small><a href="http://bertrandg.github.io/">Bertrand GAILLARD</a>
+                    <br><a href="http://www.sapiens-rwd.fr/">Sapiens RWD</a> - <a href="http://twitter.com/SapiensRWD">@SapiensRWD</a></small>
                     
 <!--                     # http://blog.zenika.com/index.php?post/2013/12/19/AngularJS-Les-directives -->
 <!--                     # http://www.sitepoint.com/practical-guide-angularjs-directives/ -->
@@ -332,38 +338,42 @@
     ...
   };
 });</code></pre>
-                        
-                      </section>
-                      
-                      <section>
-                        <h2>link (suite)</h2>
-                        
                         <ul>
+							<li>Ajout de comportements en lien avec le DOM et le <code>scope</code>.</li>
 	                        <li><code>scope</code> sans le $ car pas d'injection de dépendances ici mais l'ordre des paramètres.</li>
-	                        <li>Exécutée à chaque utilisation de la <code>directive</code>.</li>
-	                        <li>Si utilisation de librairies externe, pensez à cleaner tout ça à la suppression du controller:<br>
-	                        <pre><code>scope.$on('$destroy', function() {});</code></pre></li>
                         </ul>
                       </section>
                       
                       <section>
                         <h2>link (suite 2)</h2>
-                        
-                        <pre><code>app.directive('helloWorld', function() {
+                        <pre><code>app.directive('myDirective', function() {
   return {
     restrict: 'AE',
-    replace: true,
-    template: '<p style="background-color: green">Hello World</p>',
+    template: '<p>Hello World</p>',
     link: function(scope, elem, attrs) {
+      elem.css('background-color', 'red');
+      
       elem.bind('click', function() {
-        elem.css('background-color', 'white');
+        elem.css('background-color', getRandomColor());
+      });
+      
+      elem.bind('mouseenter', function() {
+      	elem.addClass('isHover');
         scope.$apply(function() {
-          scope.color = "white";
+          scope.showDetail = true;
         });
       });
-      elem.bind('mouseover', function() {
-        elem.css('cursor', 'pointer');
+      
+      elem.bind('mouseleave', function() {
+      	elem.removeClass('isHover');
+        scope.$apply(function() {
+          scope.showDetail = false;
+        });
       });
+    
+      function getRandomColor() {
+        return '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+      }
     }
   };
 });</code></pre>
@@ -371,6 +381,58 @@
                       
                       <section>
                         <h2>link (suite 3)</h2>
+                        
+                        <pre><code>app.directive('helloWorldThree', function ($compile, CarCompany) {
+  return {
+    restrict: 'E',
+    template: '<div>\
+                  <h2>HelloWorldThree directive</h2>\
+                  <h3>Liste des marques:</h3>\
+              </div>',
+    link: function (scope, elem, attrs) {
+      
+      var ul = document.createElement('ul');
+      var lis = '';
+      angular.forEach(CarCompany, function(item) {
+        lis += '<li ng-click="select(\'' + item.name + '\')">' + item.name + '</li>';
+      });
+      ul.innerHTML = lis;
+      
+      elem.append(ul);
+      elem.find('li').css('cursor', 'pointer');
+      
+      $compile(ul)(scope);
+    },
+    controller: function($scope) {
+      
+      $scope.select = function(marque) {
+        alert('selection de ' + marque);
+      };
+    }
+  };
+});</code></pre>
+                        
+                    	<a href="http://plnkr.co/edit/wUgKRw?p=preview" target="_blank">http://plnkr.co/edit/wUgKRw?p=preview</a>
+                      </section>
+                      
+                      <section>
+                        <h2>link (suite 4)</h2>
+                        
+                        <ul>
+	                        <li>Exécutée à chaque utilisation de la <code>directive</code>.</li>
+	                        <li>Endroit où utiliser des librairies externes à Angular qui modifient le DOM.</li>
+	                        <li>Pensez à mettre des <code>scope.$apply()</code> sur les catcher des events de ces librairies.</li>
+	                        <li>Si utilisation de librairies externes, pensez à cleaner tout ça à la suppression du controller:<br>
+	                        <pre><code>scope.$on('$destroy', function() {
+  monJqueryAutocomplete.clear();
+  monBootstrapDatepicker.destroy();
+  //..
+});</code></pre></li>
+                        </ul>
+                      </section>
+                      
+                      <section>
+                        <h2>link (suite 5)</h2>
                         
                         <p>Si on a défini <code>require</code> alors un 4éme paramétre est présent:</p>
                         
@@ -417,23 +479,63 @@ app.directive('childDirective', function () {
                         <h2>compile</h2>
                         
                         <ul>
-                        	<li>Remplace la fonction <code>link</code> et retourne une fonction qui fera office de fonction <code>link</code>.</li>
+                        	<li>Remplace la fonction <code>link</code> et retourne une fonction <code>link</code>.</li>
                         	<li>Sert à transformer le DOM du template.</li>
                         	<li>Pas d'accés au <code>scope</code> à ce moment là.</li>
-	                        <li>Fonction éxécuté une seule fois pour toute la durée de vie de l'application. Cela permet de faire des traitements une fois, ajouté pour la performance.</li>
+	                        <li>Fonction éxécuté une seule fois pour toute la durée de vie de l'application.</li>
+	                        <li>Ajouté pour les performances.</li>
                         </ul>
                       </section>
                       
                       <section>
-                        <h2>link et compile</h2>
+                        <h2>compile</h2>
+                      
+                      	<pre><code>app.directive('helloWorldFor', function ($compile, CarCompany) {
+  return {
+    restrict: 'E',
+    template: '<div>\
+                  <h2>HelloWorldFor directive</h2>\
+              </div>',
+    compile: function (elem, attrs) {
+      console.log('helloWorldFor - compile function');
+      
+      var ul = document.createElement('ul');
+      var lis = '';
+      angular.forEach(CarCompany, function(item) {
+        lis += '<li ng-click="select(\'' + item.name + '\')">' + item.name + '</li>';
+      });
+      ul.innerHTML = lis;
+      
+      elem.append(ul);
+      elem.find('li').css('cursor', 'pointer');
+      
+      // retourne link function
+      return function (scope, elem, attrs) {
+        console.log('helloWorldFor - link function');
+        // accés au scope!
+      };
+    },
+    
+    controller: function ($scope) {
+      $scope.select = function(marque) {
+        alert('selection de ' + marque);
+      };
+    }
+  };
+});</code></pre>
+						<a href="http://plnkr.co/edit/be5Sky?p=preview" target="_blank">http://plnkr.co/edit/be5Sky?p=preview</a>
+                      </section>
+                      
+                      <section>
+                        <h2>link et controller</h2>
                         
-                       	<p><code>link</code> et <code>controller</code> fonctionnent quasi à l'identique pareil mais par convention:</p>
+                       	<p><code>link</code> et <code>controller</code> fonctionnent quasi à l'identique mais:</p>
                         <ul>
-                        	<li><code>link</code> pour manipulation du DOM.</li>
-                        	<li><code>controller</code> pour communiquer avec d'autres <code>controllers</code> et <code>services</code>.</li>
+                        	<li><code>link</code> pour manipulation du DOM (convention).</li>
+                        	<li><code>controller</code> pour communiquer avec d'autres <code>controllers</code> et <code>services</code> (convention).</li>
                         </ul>
                         
-                        <p>Permet de pouvoir tester les <code>controllers</code> sans DOM.</p>
+                        <p>> Permet de pouvoir tester les <code>controllers</code> sans DOM.</p>
                       </section>
                   </section>
                 
@@ -449,8 +551,27 @@ app.directive('childDirective', function () {
                         
                         <ul>
                             <li>Pour <code>directives</code> de petite taille.</li>
-                            <li>Risque de conflit entre les variables/méthodes utilisées dans la directives et celles en dehors.</li>
+                            <li>Risque de conflit entre les variables/méthodes du <code>scope</code> utilisées dans la directives et celles en dehors.</li>
                             <li><code>Directive</code> trés liée au contexte.</li>
+                        </ul>
+                      </section>
+                      
+                      <section>
+                        <ul>
+                            <li>Eviter d'assigner des variables/méthodes au <code>scope</code>.</li>
+                            <li>Jouer plutôt avec les attributs:<br>
+                            <pre><code><my-directive custom-size="large"></my-directive></code></pre>
+                            <pre><code>link: function (scope, elem, attrs) {
+  switch(attrs.customSize) {
+    case 'large':
+      elem.addClass('sizeLarge');
+      break;
+    default:
+    case 'small':
+      elem.addClass('sizeSmall');
+      break;
+  }
+}</code></pre></li>
                         </ul>
                       </section>
                       
@@ -459,7 +580,7 @@ app.directive('childDirective', function () {
                         <p>Nouveau <code>scope</code> descendant.</p>
                         
                         <ul>
-                            <li>Evite les conflits entre les variables/méthodes de la directive et l'extérieur.</li>
+                            <li>Evite les conflits entre les variables/méthodes du <code>scope</code> de la directive et celui de l'extérieur.</li>
                             <li>Toujours accés aux variables/méthodes du <code>scope</code> parent grâce à l'héritage.</li>
                             <li><code>Directive</code> reste trés liée au contexte.</li>
                         </ul>
@@ -468,6 +589,12 @@ app.directive('childDirective', function () {
                       <section>
                         <h2>scope: {}</h2>
                         <p>Créé un <code>scope</code> isolé.</p>
+                        
+                        <ul>
+                            <li>Brise l'héritage de l'arborescence des <code>scopes</code>.</li>
+                            <li>Accés possible au parent <code>scope.$parent</code> mais fortement déconseillé.</li>
+                            <li>Permet de créer des briques réutilisables de toute beauté.</li>
+                        </ul>
                         
                         <blockquote>L'object fourni est la pour faire l'interfaçage entre <code>scope</code> où est exécuté la <code>directive</code> et le <code>scope isolé</code> de la <code>directive</code>.</blockquote>
                       </section>
@@ -479,32 +606,99 @@ app.directive('childDirective', function () {
                       </section>
                       
                       <section>
-                          <h2>3 manières d'interfacer des objets entre le <code>scope</code> d'origine et le <code>scope isolé</code>.</h2>
+                          <p>3 manières d'interfacer des objets entre le <code>scope</code> d'origine et le <code>scope isolé</code>:</p>
+                          
+                          <pre><code>app.directive('videoItem', function () {
+  return {
+    scope: {
+      num: '@videoNumero',
+      video: '=videoInfo',
+      play: '&videoPlay'
+    },
+    ...
+  };
+});
+</code></pre>
+						<p>Barbare à première vue mais simple.</p>
+                      </section>
+                      
+                      <section>
+                        <img data-src="images/isolate-scope.jpg"/>
+                        <a href="http://onehungrymind.com/infographic-understanding-angularjs-isolated-scope/" target="_blank" class="credits-link">onehungrymind.com</a>
                       </section>
                       
                       <section>
                           <h2>data-binding bidirectionnel</h2>
+                          <h1>=</h1>
+                          
+                          <ul>
+                          	<li>Synchronisation dans les 2 sens.</li>
+                          	<li>Modifications sur le <code>scope</code> d'origine reflétées sur le <code>scope isolé</code>.</li>
+                          	<li>Et inversement!</li>
+                          </ul>
                       </section>
                       
                       <section>
                           <h2>data-binding unidirectionnel</h2>
+                          <h1>@</h1>
+                          
+                          <ul>
+                          	<li>Le <code>scope isolé</code> récupére une string.</li>
+                          	<li>Coté <code>scope</code> d'origine, mettre des <code>{{ }}</code> pour transmettre du contenu bindé:
+                          	<pre><code><my-directive binding-unidir="Version {{ productversion}}"></my-directive></code></pre></li>
+                          	<li>Modifications sur le <code>scope</code> d'origine reflétées sur le <code>scope isolé</code></li>
+                          	<li>Mais PAS l'inverse.</li>
+                          </ul>
                       </section>
                       
                       <section>
-                          <h2>execution d'une expression sur le scope d'origine</h2>
+                          <h2>execution d'une expression</h2>
+                          <h1>&</h1>
+                          
+                          <ul>
+                          	<li>Exécute une expression sur le <code>scope</code> d'origine à partir du <code>scope isolé</code>.</li>
+                          	<li>Appelé sous la forme d'une méthode dans le <code>scope isolé</code>.</li>
+                          </ul>
+                      </section>
+                      
+                      <section>
+                          <h2>exemple</h2>
+                          
+                          <pre><code>app.controller('MainCtrl', function($scope) {
+  $scope.videos = [
+    { id: 51, name: 'vacances corses', img: 'http://lorempixel.com/180/200/', description: 'dfkjvgk jdfgkjd fkgkfdj kjfdkjfdk jgdfkjg kjdf kjgdf gf' },
+    { id: 62, name: 'concert MJ', img: 'http://lorempixel.com/180/200/', description: 'eroi terljedrgjrel jlfdjb lihfb njlf bjdfl bhlidjfh j' },
+    { id: 2, name: 'construction maison', img: 'http://lorempixel.com/180/200/', description: 'xcvlsdj dslgj ldrgjli dg ,jdlfig lidfgjdfijhg dlfj gd' },
+    { id: 955, name: 'le fils de lhomme', img: 'http://lorempixel.com/180/200/', description: 'oy jyth yotjh fjtlgh ijlflhij flijh ilfj hiflj' }
+  ];
+  
+  $scope.playVideo = function(idVideo) {
+    alert('lire la vidéo id ' + idVideo);
+  };
+});
+
+app.directive('videoItem', function () {
+  return {
+    restrict: 'E',
+    scope: {
+      num: '@videoNum',
+      video: '=videoInfo',
+      play: '&videoPlay'
+    },
+    template:  '<div class="item">\
+                  <img ng-src="{{ video.img}}" />\
+                  <h2>{{ num + ": " + video.name }}</h2>\
+                  <p>{{ video.description }}</p>\
+                  <button ng-click="play({idVideo: video.id})">Jouer la video</button>\
+                </div>',
+    /*link: function(scope, elem, attrs) {
+      scope.num = attrs.videoNum;
+    }*/
+  };
+});</code></pre>
+						<a href="http://plnkr.co/edit/7B5Lfg?p=preview" target="_blank">http://plnkr.co/edit/7B5Lfg?p=preview</a>
                       </section>
                   </section>
-
-                  <section>
-                    <h1>Transclusion</h1>
-                  </section>
-
-                  <section>
-                    <h1>Librairies indispensables</h1>
-                    
-                    iu-router ui-bootstrap restangular ngModules.com
-                  </section>
-                  
             </div>
 
         </div>
