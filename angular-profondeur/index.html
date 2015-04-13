@@ -538,7 +538,6 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                             <li>Limiter les <code>watchers</code> sur les tableaux.</li>
                             <li>Utiliser <code>ngRepeat</code> avec 'track by'.</li>
                             <li>Différence entre <code>ngIf</code> / <code>ngSwitch</code> et <code>ngShow</code> / <code>ngHide</code>.</li>
-                            <li>Limiter l'utilisation des <code>filters</code>.</li>
                         </ul>
                       </section>
                       
@@ -548,6 +547,16 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
 <p ng-bind="::getScore()"></p></code></pre></li>
                             <li>Possibilité d'utiliser <code>$scope.$digest()</code> au lieu de <code>$scope.$apply()</code>. [Avec précaution!]<br>
                             Le digest cycle parcourera seulement le <code>scope</code> courant et ses descendants au lieu de toute l'application.</li>
+                        </ul>
+                      </section>
+                      
+                      <section>
+                        <ul>
+                            <li>Limiter l'utilisation des <code>filters</code>.</li>
+                            <li><p>Sur le PROD, passer <code>debugInfoEnabled</code> à <code>false</code>:<br>
+                            <pre><code>app.config(function($compileProvider) {
+  $compileProvider.debugInfoEnabled(false);
+});</code></pre></li>
                         </ul>
                       </section>
                   </section>
@@ -569,6 +578,17 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
 							<li>...</li>
 						</ul>
                         <p>Plus sur <a href="http://ngmodules.org/" target="_blank">ngmodules.org</a></p>
+                      </section>
+                      
+                      <section>
+                        <p>Surcouches d'Angular pour applications mobiles hybrides:</p>
+                        <ul>
+	                        <li><a href="http://ionicframework.com/" target="_blank">Ionic</a></li>
+	                        <li><a href="http://onsen.io/" target="_blank">Onsen UI</a></li>
+							<li><a href="http://www.appgyver.com/supersonic" target="_blank">Supersonic</a></li>
+							<li><a href="https://famo.us/integrations/angular/#/intro" target="_blank">Famo.us Angular</a></li>
+							<li>...</li>
+						</ul>
                       </section>
                   </section>
                 
@@ -671,30 +691,6 @@ $color_hover_start: #F4F4F4;
     border-color: #666666; }
   .level-2 .options {
     border-bottom: 1px solid #b9abb2; }
-
-.level-3 {
-  background: #bdb0b7;
-  border: 1px solid #ab9aa2;
-  -moz-box-shadow: inset 0px 0px 10px 0px #8f7984;
-  -webkit-box-shadow: inset 0px 0px 10px 0px #8f7984;
-  -o-box-shadow: inset 0px 0px 10px 0px #8f7984;
-  box-shadow: inset 0px 0px 10px 0px #8f7984; }
-  .level-3:hover {
-    border-color: #666666; }
-  .level-3 .options {
-    border-bottom: 1px solid #ab9aa2; }
-
-.level-4 {
-  background: #afa0a8;
-  border: 1px solid #9d8993;
-  -moz-box-shadow: inset 0px 0px 10px 0px #7f6a75;
-  -webkit-box-shadow: inset 0px 0px 10px 0px #7f6a75;
-  -o-box-shadow: inset 0px 0px 10px 0px #7f6a75;
-  box-shadow: inset 0px 0px 10px 0px #7f6a75; }
-  .level-4:hover {
-    border-color: #666666; }
-  .level-4 .options {
-    border-bottom: 1px solid #9d8993; }
     
 ...</code></pre>
                       </section>
@@ -797,6 +793,27 @@ app.controller('MainCtrl', MainCtrl);</code></pre>
                   <section>
                       <section>
                         <h1>L'organisation</h1>
+                      </section>
+                      
+                      <section>
+                        <ul>
+                        	<li>Un module pour chaque fonctionnalité.</li>
+                        	<li>Un fichier par 'élément' (<code>controller</code>, <code>directive</code>, <code>filter</code>,..).</li>
+                        </ul>
+                      </section>
+                      
+                      <section>
+                        <img data-src="images/organisation0.png" width="232" height="588" />
+                        <img data-src="images/organisation1.png" width="232" height="588"/>
+                      </section>
+                      
+                      <section>
+                        <ul>
+                        	<li>Pour gros projet, utilisez la syntaxe à point:<br>
+                        	<pre><code>app.controller('app.library.PhotosListCtrl', function(...) {});</code></pre></li>
+                        	<li>Commencez par créer toute ses tâches Grunt.</li>
+                        	<li>Utilisez <code>angular.bootstrap()</code> au lieu de <code>ng-app</code> pour faire un beau loading.</li>
+                        </ul>
                       </section>
                   </section>
 

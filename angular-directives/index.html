@@ -35,35 +35,58 @@
     </head>
 
     <body>
+        <style>
+        .reveal pre code {
+            //max-height: 500px;
+        }
+        .reveal blockquote {
+            width: 90%;
+        }
+        .reveal pre {
+            font-size: .45em;
+        }
+        .reveal p > code,
+        .reveal blockquote > code,
+        .reveal li > code {
+            color: #8b743d;
+        }
+        .reveal .credits-link {
+            font-size: .35em;
+            display: block;
+        }
+        </style>
 
         <div class="reveal">
 
             <!-- Any section element inside of this container is displayed as a slide -->
             <div class="slides">
                 
-              	<section>
+                  <section>
                     <h1>Formation AngularJS</h1>
                     <h2>Directives</h2>
                     <small><a href="http://bertrandg.github.io/">Bertrand GAILLARD</a></small>
                     
                     # http://blog.zenika.com/index.php?post/2013/12/19/AngularJS-Les-directives
                     # http://www.sitepoint.com/practical-guide-angularjs-directives/
-              	</section>
+                  </section>
                 
-              	<section>
-                    <h1>Pourquoi utiliser des directives</h1>
-                    
-                    <ul>
-                    	<li>Interaction avec le DOM (Jamais dans les <code>controllers</code>).</li>
-                    	<li>Integration de librairies externes.</li>
-                    	<li>Template sémantique.</li>
-                    </ul>
-              	</section>
-                
-              	<section>
-              		<p>Template sémantique</p>
-              		
-              		<pre><code><app>
+                  <section>
+                      <section>
+                        <h1>Pourquoi faire ?</h1>
+                      </section>
+                        
+                      <section>
+                        <ul>
+                            <li>Interaction avec le DOM (Jamais dans les <code>controllers</code>).</li>
+                            <li class="fragment">Integration de librairies externes.</li>
+                            <li class="fragment">Template sémantique.</li>
+                        </ul>
+                      </section>
+                      
+                      <section>
+                          <p>Template sémantique</p>
+                          
+                          <pre><code><app>
   <header>
     <navigation-bar></navigation-bar>
     <user-info></user-info>
@@ -74,22 +97,414 @@
   </content>
   <footer></footer>
 </app></code></pre>
-              	</section>
+                      </section>
+                  </section>
                 
-              	<section>
-                    <h1>Différents types de scope</h1>
-              	</section>
+                  <section>
+                      <section>
+                        <h1>Comment ?</h1>
+                      </section>
+                      
+                      <section>
+                          <p>Simple fonction qui retourne la définition de la <code>directive</code>:</p>
+                      
+                          <pre><code>app.directive('directiveName', function() {
+  return {
+    // définition de la directive
+  };
+});</code></pre><br>
+                          <p>DDO: "Directive Definition Object"</p>
+                      </section>
+                      
+                      <section>
 
-              	<section>
+                          <pre><code>app.directive('helloDirective', function() {
+  return {
+    restrict: 'AE',
+    replace: true,
+    template: '<h2>Hello world!</h2>'
+  };
+});</code></pre>
+
+                        <pre class="fragment"><code><div class="container">
+  <hello-directive></hello-directive>
+</div></code></pre>
+                        <pre class="fragment"><code><div class="container">
+  <p hello-directive></p>
+</div></code></pre>
+                        <p class="fragment">Résultat:<br>
+                            <pre class="fragment"><code><div class="container">
+  <h2>Hello world!</h2>
+</div></code></pre>
+                        </p>
+                      </section>
+                  </section>
+                
+                  <section>
+                      <section>
+                        <h1>Options</h1>
+                      </section>
+                      
+                      <section>
+                        <h2>Restrict</h2>
+                        
+                        <ul>
+                            <li>"E" Element<br>
+                            <pre><code><my-directive></my-directive></code></pre></li>
+                            <li>"A" Attribute<br>
+                            <pre><code><div my-directive=""></div></code></pre></li>
+                            <li>"C" Class<br>
+                            <pre><code><div class="my-directive"></div></code></pre></li>
+                            <li>"M" Comment
+                            <pre><code><!-- directive: my-directive --></code></pre></li>
+                        </ul>
+                      </section>
+                      
+                      <section>
+                        <h2>Priority</h2>
+                          <pre><code>app.directive('helloDirective', function() {
+  return {
+    priority: 100,
+    ...
+  };
+});</code></pre>
+                        <p>Pour directives sur le même élément, le nombre le plus haut est exécuté en premier.</p>
+                        
+                        <pre><code><div ng-if="showMap" ng-controller="MapCtrl"></div>
+
+<my-directive ng-if="showMyDirective()"></my-directive></code></pre>
+
+                        <p><code>ngIf</code> a une <code>priority</code> de 600.</p>
+                        <p><code>ngController</code> a une <code>priority</code> de 500.</p>
+                      </section>
+                      
+                      <section>
+                        <h2>Terminal</h2>
+                          <pre><code>app.directive('helloDirective', function() {
+  return {
+    priority: 100,
+    terminal: true,
+    ...
+  };
+});</code></pre>
+                        
+                        <p>Aucune directive avec une <code>priority</code> plus basse ne sera exécuté sur l'élément.</p>
+                        
+                        <pre><code><div hello-directive>{{ variable }}</div>
+
+<div hello-directive ng-bind="variable"></div></code></pre>
+                        <pre><code><div>{{ variable }}</div></code></pre>
+                        
+                        <p><code>ngBind</code> a une <code>priority</code> de 0.</p>
+                      </section>
+                      
+                      <section>
+                        <h2>scope</h2>
+                          <pre><code>app.directive('helloDirective', function() {
+  return {
+    scope: false,
+    ...
+  };
+});</code></pre>
+                        <p>Peut prendre 3 valeurs:</p>
+                        <ul>
+                            <li>FALSE: Pas de nouveau <code>scope</code>, utilise le courant.</li>
+                            <li>TRUE: Créé un nouveau <code>scope</code> déscendant du courant.</li>
+                            <li>OBJECT: Créé un <code>scope isolé</code>.</li>
+                        </ul>
+                        
+                        <p>Par défaut à FALSE.</p>
+                      </section>
+                      
+                      <section>
+                        <h2>controlleur</h2>
+                          <pre><code>app.directive('helloDirective', function() {
+  return {
+    controller: 'HelloDirCtrl',
+    // ou bien
+    controller: function($scope, OtherService) {},
+    ...
+  };
+});</code></pre>
+                        <p>Un <code>controller</code> classique lié au <code>scope</code> de la <code>directive</code>.<br>Pas d'interaction avec le DOM.</p>
+                        
+                        <span class="fragment">
+                        	<pre><code>app.directive('ngController', function() {
+  return {
+    restrict: 'A',
+    scope: true,
+    controller: '@',
+    priority: 500
+  };
+});</code></pre>
+							<pre><code><div ng-controller="PlayerCtrl"></div></code></pre>
+	                        <a href="https://github.com/angular/angular.js/blob/master/src/ng/directive/ngController.js#L229" target="_blank" class="credits-link">Code source de ngController</a>
+                        </span>
+                      </section>
+                      
+                      <section>
+                        <h2>require</h2>
+                          <pre><code>app.directive('helloDirective', function() {
+  return {
+    require: [
+        '^parentDirective', /* présence de directive parentDirective REQUISE sur élément PARENT */
+        'otherDirective', /* présence de directive ngModel REQUISE sur l élement */
+        '?ngModel' /* présence de directive ngModel OPTIONNELLE sur l élement */
+      ],
+    ...
+  };
+});</code></pre>
+                        <p>Permet d'imposer la présence d'une ou plusieurs <code>directives</code> sur l'élément courant ou bien son parent.</p>
+                        <p>String ou tableau de strings.</p>
+                      </section>
+                      
+                      <section>
+                        <h2>template</h2>
+                          <pre><code>app.directive('helloDirective', function() {
+  return {
+    template: '<div><h2>Hello directive!</h2></div>',
+    ...
+  };
+});</code></pre>
+                        <p>Remplace le contenu de l'élément sur lequel la directive est placée (<code>element.html()</code>).</p>
+                        <p>Doit avoir un élément root unique.</p>
+                        <p>Peut contenir d'autres <code>directives</code>.</p>
+                      </section>
+                      
+                      <section>
+                        <h2>templateUrl</h2>
+                          <pre><code>app.directive('helloDirective', function() {
+  return {
+    templateUrl: 'src/app/gallery/views/helloDirective.tpl.html',
+    ...
+  };
+});</code></pre>
+                        <p>Comme <code>template</code> mais avec un fichier externe.</p>
+                        <p>Requête Ajax la première fois puis stocké dans le <code>$templateCache</code>.</p>
+                      </section>
+                      
+                      <section>
+                        <h2>replace</h2>
+                          <pre><code>app.directive('helloDirective', function() {
+  return {
+    replace: true,
+    ...
+  };
+});</code></pre>
+                        <p>Booléen qui définit si l'élément sur lequel est la <code>directive</code> doit être remplacé ou non.</p>
+                        <p>Si TRUE, tous les attributs (classes, autres directives,..) sont répliqués sur l'élément root du template.</p>
+                      </section>
+                      
+                      <section>
+                        <h2>transclude</h2>
+                          <pre><code>app.directive('videoPanel', function() {
+  return {
+    scope: {
+      title: '@panelTitle'
+    }
+    transclude: true,
+    template:  "<panel class="videoPanel">\
+                    <panel-header>{{ title }}</panel-header>\
+                    <panel-content ng-transclude></panel-content>\
+                </panel>"
+    },
+    ...
+  };
+});</code></pre>
+                          <pre><code><video-panel panel-title="Vidéo du mois">
+  <img ng-src="video.image"/>
+  <p>{{ video.description }}</p>
+  <a ng-click="playVideo(video.id)">Voir</a>
+</video-panel></code></pre>
+
+                        <p>Permet d'avoir une <code>directive</code> avec un <code>scope isolé</code> qui a du contenu lié à son <code>scope</code> d'origine.</p>
+                      </section>
+                      
+                      <section>
+                        <h2>link</h2>
+                          <pre><code>app.directive('helloDirective', function() {
+  return {
+    link: function (scope, element, attrs) {
+      // scope = le scope défini pour la directive, le même que dans le controller.
+      // element = jQuery/jQLite wrapped element.
+      // attrs = objet avec comme propriété tous les attributs de l'élément (string).
+    },
+    ...
+  };
+});</code></pre>
+                        
+                      </section>
+                      
+                      <section>
+                        <h2>link (suite)</h2>
+                        
+                        <ul>
+	                        <li><code>scope</code> sans le $ car pas d'injection de dépendances ici mais l'ordre des paramètres.</li>
+	                        <li>Exécutée à chaque utilisation de la <code>directive</code>.</li>
+	                        <li>Si utilisation de librairies externe, pensez à cleaner tout ça à la suppression du controller:<br>
+	                        <pre><code>scope.$on('$destroy', function() {});</code></pre></li>
+                        </ul>
+                      </section>
+                      
+                      <section>
+                        <h2>link (suite 2)</h2>
+                        
+                        <pre><code>app.directive('helloWorld', function() {
+  return {
+    restrict: 'AE',
+    replace: true,
+    template: '<p style="background-color: green">Hello World</p>',
+    link: function(scope, elem, attrs) {
+      elem.bind('click', function() {
+        elem.css('background-color', 'white');
+        scope.$apply(function() {
+          scope.color = "white";
+        });
+      });
+      elem.bind('mouseover', function() {
+        elem.css('cursor', 'pointer');
+      });
+    }
+  };
+});</code></pre>
+                      </section>
+                      
+                      <section>
+                        <h2>link (suite 3)</h2>
+                        
+                        <p>Si on a défini <code>require</code> alors un 4éme paramétre est présent:</p>
+                        
+                        <pre><code>app.directive('parentDirective', function () {
+  return {
+    restrict: 'E',
+    transclude: true,
+    template: '<div>\
+                  <p>Parent: {{ message }}</p>\
+                  <div ng-transclude></div>\
+              </div>',
+    controller: function ($scope) {
+      this.setMessage = function (message) {
+        $scope.message = message;
+      };
+    }
+  };
+});
+
+app.directive('childDirective', function () {
+  return {
+    restrict: 'E',
+    template: '<span>\
+                  <p>Child: {{ message }}</p>\
+                  <input type="text" ng-model="message" />\
+                  <button ng-click="setParentMessage(message)">Change</button>\
+              </span>',
+    require: [
+      '^parentDirective', /* présence de directive parentDirective REQUISE sur élément PARENT */
+      '?ngModel' /* présence de directive ngModel OPTIONNELLE sur l'élement */
+    ],
+    link: function (scope, element, attrs, controllers) {
+      var parentController = controllers[0];
+      var ngModel = controllers[1];
+
+      scope.setParentMessage = parentController.setMessage;
+    }
+  }
+});</code></pre>
+						<a href="http://plnkr.co/edit/z6F3tD?p=preview" target="_blank">http://plnkr.co/edit/z6F3tD?p=preview</a>
+                      </section>
+                      
+                      <section>
+                        <h2>compile</h2>
+                        
+                        <ul>
+                        	<li>Remplace la fonction <code>link</code> et retourne une fonction qui fera office de fonction <code>link</code>.</li>
+                        	<li>Sert à transformer le DOM du template.</li>
+                        	<li>Pas d'accés au <code>scope</code> à ce moment là.</li>
+	                        <li>Fonction éxécuté une seule fois pour toute la durée de vie de l'application. Cela permet de faire des traitements une fois, ajouté pour la performance.</li>
+                        </ul>
+                      </section>
+                      
+                      <section>
+                        <h2>link et compile</h2>
+                        
+                       	<p><code>link</code> et <code>controller</code> fonctionnent quasi à l'identique pareil mais par convention:</p>
+                        <ul>
+                        	<li><code>link</code> pour manipulation du DOM.</li>
+                        	<li><code>controller</code> pour communiquer avec d'autres <code>controllers</code> et <code>services</code>.</li>
+                        </ul>
+                        
+                        <p>Permet de pouvoir tester les <code>controllers</code> sans DOM.</p>
+                      </section>
+                  </section>
+                
+                
+                  <section>
+                      <section>
+                        <h1>types de scope</h1>
+                      </section>
+                      
+                      <section>
+                        <h2>scope: false</h2>
+                        <p>Pas de nouveau <code>scope</code>.</p>
+                        
+                        <ul>
+                            <li>Pour <code>directives</code> de petite taille.</li>
+                            <li>Risque de conflit entre les variables/méthodes utilisées dans la directives et celles en dehors.</li>
+                            <li><code>Directive</code> trés liée au contexte.</li>
+                        </ul>
+                      </section>
+                      
+                      <section>
+                        <h2>scope: true</h2>
+                        <p>Nouveau <code>scope</code> descendant.</p>
+                        
+                        <ul>
+                            <li>Evite les conflits entre les variables/méthodes de la directive et l'extérieur.</li>
+                            <li>Toujours accés aux variables/méthodes du <code>scope</code> parent grâce à l'héritage.</li>
+                            <li><code>Directive</code> reste trés liée au contexte.</li>
+                        </ul>
+                      </section>
+                      
+                      <section>
+                        <h2>scope: {}</h2>
+                        <p>Créé un <code>scope</code> isolé.</p>
+                        
+                        <blockquote>L'object fourni est la pour faire l'interfaçage entre <code>scope</code> où est exécuté la <code>directive</code> et le <code>scope isolé</code> de la <code>directive</code>.</blockquote>
+                      </section>
+                  </section>
+
+                  <section>
+                      <section>
+                        <h1>Scope isolé</h1>
+                      </section>
+                      
+                      <section>
+                          <h2>3 manières d'interfacer des objets entre le <code>scope</code> d'origine et le <code>scope isolé</code>.</h2>
+                      </section>
+                      
+                      <section>
+                          <h2>data-binding bidirectionnel</h2>
+                      </section>
+                      
+                      <section>
+                          <h2>data-binding unidirectionnel</h2>
+                      </section>
+                      
+                      <section>
+                          <h2>execution d'une expression sur le scope d'origine</h2>
+                      </section>
+                  </section>
+
+                  <section>
                     <h1>Transclusion</h1>
-              	</section>
+                  </section>
 
-              	<section>
+                  <section>
                     <h1>Librairies indispensables</h1>
                     
                     iu-router ui-bootstrap restangular ngModules.com
-              	</section>
-              	
+                  </section>
+                  
             </div>
 
         </div>
