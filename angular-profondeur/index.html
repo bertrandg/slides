@@ -80,7 +80,7 @@
                       
                       <section>
                           <ul>
-                            <li>Secret du data-binding</li>
+                            <li>Secret du data-binding.</li>
                             <li>Ce qui donne le coté "magique".</li>
                           </ul>
                       </section>
@@ -123,7 +123,7 @@ $scope.$watch(function() {
                       </section>
                       
                       <section>
-                          <p>2. Quand un "digest cycle" tourne, les <code>expressions</code> sont parsées et si résultat différent du précédent, la fonction associée est lancée (dirty checking).</p>
+                          <p>2. Quand un "digest cycle" tourne, les <code>expressions</code> sont parsées et si résultat diffère du précédent, la fonction associée est lancée (dirty checking).</p>
                           
                           <pre><code>// code explicatif non fonctionnel !!
 var Scope = function() {
@@ -203,11 +203,11 @@ var Scope = function() {
                       </section>
                       
                       <section>
-                          <p>A noter:</p>
+                          <h2>A noter</h2>
                           
                           <ul>
                               <li>Bon code = peu/pas de <code>$apply</code>.</li>
-                              <li>Le <code>$apply</code> est principalement utilisé pour intégration libraries externes à Angular.</li>
+                              <li>Le <code>$apply</code> est principalement utilisé pour l'intégration de libraries externes à Angular.</li>
                               <li>Digest cycle = Digest loop car un cycle peut changer d'autres <code>watchers</code> (10 fois max).</li>
                           </ul>
                       </section>
@@ -246,10 +246,10 @@ var Scope = function() {
                         
                     <section>
                         <ul>
-                            <li>Un service = simple objet JS avec propriétés et méthodes.</li>
+                            <li>Un service = Simple objet JS avec propriétés et méthodes.</li>
                             <li>Utilise l'injection de dépendances.</li>
                             <li>Créé une seule fois lors du premier appel (Singleton).</li>
-                            <li>Réutilisé lors des suivants pour toute la durée de vie de la SPA.</li>
+                            <li>Réutilisé lors des appels suivants pour toute la durée de vie de la SPA.</li>
                             <li>Accessible de partout quelque soit le module sur lequel ils sont créés ou appelés.</li>
                             <li>Peut être injecté dans <code>controllers</code>, <code>filtres</code>, <code>services</code>,..</li>
                             <li>Utilisation à volonté pour alléger au maximum les controlleurs.</li>
@@ -375,7 +375,7 @@ app.controller('AppCtrl', function($scope, MyService) {
                             <li>Stocker un objet JS de type <code>object</code> ou bien de type primitif (<code>booléen</code>, <code>string</code>, <code>number</code>).</li>
                             <li>Inaccessible par les <code>provider</code> lors de la phase de configuration du module.</li>
                             <li>Peut être modifié pendant l'éxecution de l'application.</li>
-                            <li>Impossible d'utiliser l'injection de dépendances pour utiliser d'autres services.</li>
+                            <li>Impossible d'utiliser l'injection de dépendances pour utiliser d'autres <code>services</code>.</li>
                         </ul>
                         
                         <pre><code>app.value('GoogleMapAPI_KEY', '5VUhR4kqvVvhXRH4BIAN')
@@ -396,7 +396,7 @@ app.controller('AppCtrl', function($scope, VideoData) {
                         <h2>5/5: CONSTANT()</h2>
                         <ul>
                             <li>Fonctionne comme <code>value()</code> mais est accessible lors de la phase de configuration du module.</li>
-                            <li>Malgré leur nom, elles peuvent être modifiée.</li>
+                            <li>Malgré leur nom, elles peuvent être modifiées.</li>
                         </ul>
                         
                         <pre><code>app.constant('UselessData', {
@@ -414,7 +414,7 @@ app.controller('AppCtrl', function($scope, UselessData) {
                     </section>
                     
                     <section>
-                    <h2>Exemple de déclaration de services:</h2>
+                    <h2>Exemple de déclaration de services</h2>
                     
 <pre><code>playerApp.value('Params', {
   URL_API: 'https://api.dailymotion.com/videos',
@@ -459,7 +459,7 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                         
                         
                     <section>
-                        <p>Exemple d'utilisation de services:</p>
+                        <h2>Exemple d'utilisation de services</h2>
                         
 <pre><code>playerApp.controller('VideoPlayerModalCtrl', function($scope, $modalInstance, Dailymotion, video) {
   $scope.video = video;
@@ -476,16 +476,15 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                     <section>
                         <h2>Services fournis par AngularJS</h2>
                         
-                        <p>$http, $location, $filter, $window, $timeout, $interval, $animate, $rootScope, $document,..</p>
-                        
                         <ul>
-                            <li>Commencent tous par $ (conventions)</li>
-                            <li>Couche d'abstraction utile pour fonctionner dans l'écosystéme AngularJs et pour être mockée lors des tests.</li>
-                            <li><code>Providers</code> associés pour les configurer au démarrage:</li>
+                            <li>Couche d'abstraction utile pour fonctionner dans l'écosystéme AngularJs et pour être mocké lors des tests.</li><br>
+                            <li>Commencent tous par $ (conventions):<br>
+                        	<code>$http</code>, <code>$location</code>, <code>$filter</code>, <code>$window</code>, <code>$timeout</code>, <code>$interval</code>, <code>$animate</code>, <code>$rootScope</code>, <code>$document</code>,..
+                            </li><br>
+                            <li><code>Providers</code> associés pour les configurer au démarrage:<br>
+                        	<code>$httpProvider</code>, <code>$locationProvider</code>, <code>$filterProvider</code>, <code>$animateProvider</code>,..
+                            </li>
                         </ul>
-                        
-                        <p>$httpProvider, $locationProvider, $filterProvider, $animateProvider, $rootScopeProvider,..</p>
-                        
                     </section>
                         
                 </section>
@@ -508,7 +507,7 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                       <section>
                           <h2>REST doit être sans état (stateless)</h2>
                           
-                          <blockquote>Chaque requête d’un client vers un serveur doit contenir toute l’information nécessaire pour permettre au serveur de comprendre la requête, sans avoir à dépendre d’un contexte conservé sur le serveur. Cela libère de nombreuses interactions entre le client et le serveur.</blockquote>
+                          <blockquote>"Chaque requête d’un client vers un serveur doit contenir toute l’information nécessaire pour permettre au serveur de comprendre la requête, sans avoir à dépendre d’un contexte conservé sur le serveur. Cela libère de nombreuses interactions entre le client et le serveur."</blockquote>
                       </section>
                       
                       <section>
@@ -529,7 +528,7 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                         
                         <p>Requête d'authentification qui retourne un "JWT access token" à durée limité qui est ajouté à chaque requête REST.<br><br><a href="https://github.com/lexik/LexikJWTAuthenticationBundle">Bundle Symfony2 LexikJWTAuthenticationBundle.</a></p>
                         
-                        <p>Solution de plus en plus utilisée et trés bien pour client mobile.</p>
+                        <p>Solution de plus en plus utilisée et trés bien pour les clients mobiles.</p>
                       </section>
                   </section>
                 
@@ -552,14 +551,14 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                             <li>Utiliser le 'one-time binding' le plus souvent possible.<br><pre><code><h1>{{ ::title }}</h1>
 <p ng-bind="::getScore()"></p></code></pre></li>
                             <li>Possibilité d'utiliser <code>$scope.$digest()</code> au lieu de <code>$scope.$apply()</code>. [Avec précaution!]<br>
-                            Le digest cycle parcourera seulement le <code>scope</code> courant et ses descendants au lieu de toute l'application.</li>
+                            Le digest cycle parcourera seulement le <code>scope</code> courant et ses descendants plutôt que toute l'application.</li>
                         </ul>
                       </section>
                       
                       <section>
                         <ul>
                             <li>Limiter l'utilisation des <code>filters</code>.</li>
-                            <li><p>Sur le PROD, passer <code>debugInfoEnabled</code> à <code>false</code>:<br>
+                            <li><p>Sur la prod, passer <code>debugInfoEnabled</code> à <code>false</code>:<br>
                             <pre><code>app.config(function($compileProvider) {
   $compileProvider.debugInfoEnabled(false);
 });</code></pre></li>
@@ -606,7 +605,7 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                       <section>
                         <h2>Bower</h2>
                         
-                        <p>Equivalent de <code>Composer</code> pour les libraires front.</p>
+                        <p>Equivalent de <code>Composer</code> pour les libraires Front.</p>
                         
                         <pre><code>
 bower init                              // démarrage d'un projet bower
@@ -625,9 +624,9 @@ bower cache clean                       // suppression cache bower</code></pre>
                         
                         <ul>
                             <li>Méta-langage utilisé pour générer des feuilles de style au format CSS.</li>
-                            <li>Utilisation de variables, <code>mixins</code>, imbrication,..</li>
+                            <li>Utilisation de variables, mixins, imbrication,..</li>
                             <li>Pas indispensable mais indispensable!</li>
-                            <li><code>Compass</code> est une librairie SASS comprenant de nombreux <code>mixins</code>.</li>
+                            <li><code>Compass</code> est une librairie SASS comprenant de nombreux mixins.</li>
                         </ul>
                       </section>
                           
@@ -708,9 +707,10 @@ $color_hover_start: #F4F4F4;
                         	<li>Exécuteur de tâches écrit en JS.</li>
                         	<li>Fonctionne avec NodeJS.</li>
                         	<li>Permet de faire absolument tout!</li>
-                        	<li>4403 tâches sur <a href="http://gruntjs.com/plugins" target="_blank">gruntjs.com</a></li>
+                        	<li>4403 tâches référencées  sur <a href="http://gruntjs.com/plugins" target="_blank">gruntjs.com</a></li>
                         	<li>Utile pendant le développement pour éxecuter les tâches répétitives et pour la production.</li>
-                        	<li>Paramètrage du fichier <code>Gruntfile.js</code></li>
+                        	<li>Paramètrage dans un fichier <code>Gruntfile.js</code></li>
+                        	<li>Utilisation de <a href="http://gulpjs.com/" target="_blank">Gulp</a> également possible.</li>
                         </ul>
                       </section>
                           

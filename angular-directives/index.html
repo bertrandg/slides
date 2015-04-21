@@ -83,7 +83,7 @@
                         
                       <section>
                         <ul>
-                            <li>Interaction avec le DOM (Jamais dans les <code>controllers</code>).</li>
+                            <li>Interactions avec le DOM (Jamais dans les <code>controllers</code>).</li>
                             <li class="fragment">Integration de librairies externes.</li>
                             <li class="fragment">Template sémantique.</li>
                         </ul>
@@ -174,14 +174,14 @@
     ...
   };
 });</code></pre>
-                        <p>Pour directives sur le même élément, le nombre le plus haut est exécuté en premier.</p>
+                        <p>Pour <code>directives</code> sur le même élément, le nombre le plus haut est exécuté en premier.</p>
                         
                         <pre><code><div ng-if="showMap" ng-controller="MapCtrl"></div>
 
 <my-directive ng-if="showMyDirective()"></my-directive></code></pre>
 
-                        <p><code>ngIf</code> a une <code>priority</code> de 600.</p>
-                        <p><code>ngController</code> a une <code>priority</code> de 500.</p>
+                        <p><code>ngIf</code> a une <code>priority</code> de 600.<br>
+                        <code>ngController</code> a une <code>priority</code> de 500.</p>
                       </section>
                       
                       <section>
@@ -194,7 +194,7 @@
   };
 });</code></pre>
                         
-                        <p>Aucune directive avec une <code>priority</code> plus basse ne sera exécuté sur l'élément.</p>
+                        <p>Aucune <code>directive</code> avec une <code>priority</code> plus basse ne sera exécutée sur l'élément.</p>
                         
                         <pre><code><div hello-directive>{{ variable }}</div>
 
@@ -214,16 +214,16 @@
 });</code></pre>
                         <p>Peut prendre 3 valeurs:</p>
                         <ul>
-                            <li>FALSE: Pas de nouveau <code>scope</code>, utilise le courant.</li>
-                            <li>TRUE: Créé un nouveau <code>scope</code> déscendant du courant.</li>
-                            <li>OBJECT: Créé un <code>scope isolé</code>.</li>
+                            <li><code>FALSE</code>: Pas de nouveau <code>scope</code>, utilise le courant.</li>
+                            <li><code>TRUE</code>: Créé un nouveau <code>scope</code> déscendant du courant.</li>
+                            <li><code>OBJECT</code>: Crée un <code>scope isolé</code>.</li>
                         </ul>
                         
-                        <p>Par défaut à FALSE.</p>
+                        <p>Par défaut à <code>FALSE</code>.</p>
                       </section>
                       
                       <section>
-                        <h2>controlleur</h2>
+                        <h2>controller</h2>
                           <pre><code>app.directive('helloDirective', function() {
   return {
     controller: 'HelloDirCtrl',
@@ -272,7 +272,7 @@
     ...
   };
 });</code></pre>
-                        <p>Remplace le contenu de l'élément sur lequel la directive est placée (<code>element.html()</code>).</p>
+                        <p>Remplace le contenu de l'élément sur lequel la <code>directive</code> est placée (<code>element.html()</code>).</p>
                         <p>Doit avoir un élément root unique.</p>
                         <p>Peut contenir d'autres <code>directives</code>.</p>
                       </section>
@@ -286,7 +286,7 @@
   };
 });</code></pre>
                         <p>Comme <code>template</code> mais avec un fichier externe.</p>
-                        <p>Requête Ajax la première fois puis stocké dans le <code>$templateCache</code>.</p>
+                        <p>Requête Ajax la première fois puis stocké dans le service <code>$templateCache</code>.</p>
                       </section>
                       
                       <section>
@@ -298,7 +298,7 @@
   };
 });</code></pre>
                         <p>Booléen qui définit si l'élément sur lequel est la <code>directive</code> doit être remplacé ou non.</p>
-                        <p>Si TRUE, tous les attributs (classes, autres directives,..) sont répliqués sur l'élément root du template.</p>
+                        <p>Si <code>TRUE</code>, tous les attributs (classes, autres directives,..) sont répliqués sur l'élément root du template.</p>
                       </section>
                       
                       <section>
@@ -422,7 +422,7 @@
 	                        <li>Exécutée à chaque utilisation de la <code>directive</code>.</li>
 	                        <li>Endroit où utiliser des librairies externes à Angular qui modifient le DOM.</li>
 	                        <li>Pensez à mettre des <code>scope.$apply()</code> sur les catcher des events de ces librairies.</li>
-	                        <li>Si utilisation de librairies externes, pensez à cleaner tout ça à la suppression du controller:<br>
+	                        <li>Si utilisation de librairies externes, pensez à cleaner tout ça à la suppression du <code>controller</code>:<br>
 	                        <pre><code>scope.$on('$destroy', function() {
   monJqueryAutocomplete.clear();
   monBootstrapDatepicker.destroy();
@@ -482,8 +482,8 @@ app.directive('childDirective', function () {
                         	<li>Remplace la fonction <code>link</code> et retourne une fonction <code>link</code>.</li>
                         	<li>Sert à transformer le DOM du template.</li>
                         	<li>Pas d'accés au <code>scope</code> à ce moment là.</li>
-	                        <li>Fonction éxécuté une seule fois pour toute la durée de vie de l'application.</li>
-	                        <li>Ajouté pour les performances.</li>
+	                        <li>Fonction éxécutée une seule fois pour toute la durée de vie de l'application.</li>
+	                        <li>Ajoutée pour les performances.</li>
                         </ul>
                       </section>
                       
@@ -551,7 +551,7 @@ app.directive('childDirective', function () {
                         
                         <ul>
                             <li>Pour <code>directives</code> de petite taille.</li>
-                            <li>Risque de conflit entre les variables/méthodes du <code>scope</code> utilisées dans la directives et celles en dehors.</li>
+                            <li>Risque de conflit entre les variables/méthodes du <code>scope</code> utilisées dans la <code>directive</code> et celles en dehors.</li>
                             <li><code>Directive</code> trés liée au contexte.</li>
                         </ul>
                       </section>

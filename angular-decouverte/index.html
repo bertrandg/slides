@@ -180,17 +180,17 @@
                         <h2>Les controllers et les scopes</h2>
                         
                         <ul>
-                            <li>Toujours liés entre eux.</li>
-                            <li>Le scope est la glue entre controlleur et vue.</li>
-                            <li>Le scope est un simple objet JS sur lequel on ajoute valeurs et méthodes.</li>
-                            <li>Nouvelle instance créée à la volée au besoin puis détruite quand plus utile (pas de persistance).</li>
+                            <li>Toujours liés entre eux et à un élément du DOM.</li>
+                            <li>Le <code>scope</code> est la glue entre controlleur et vue.</li>
+                            <li>Le <code>scope</code> est un simple objet JS sur lequel on ajoute des propriétés (valeurs et méthodes).</li>
+                            <li>Nouvelles instances créées au besoin puis détruites quand inutiles (pas de persistance).</li>
                             <li>Aucune manipulation de DOM dans les <code>controllers</code>.</li>
                         </ul>
                     </section>
                     
                     <section>
                         <ul>
-                            <li>Pour chaque <code>ngApp</code>, un <code>$rootScope</code> est créé, puis chaque controlleur crée un <code>scope</code> descendant, ce qui créé une arborescence.</li>
+                            <li>Pour chaque <code>ngApp</code>, un <code>$rootScope</code> est créé, puis chaque controlleur crée un <code>scope</code> descendant, ce qui crée une arborescence.</li>
                             <li>Chaque <code>$scope</code> peut accéder à son parent grâce à <code>$scope.$parent</code>.</li>
                         </ul>
                         
@@ -260,7 +260,7 @@
                     
                     <section>
                         <h2>$broadcast</h2>
-                        <p>L'<code>event</code> descend chaque branche de la hiérarchie des <code>scopes</code> en partant du <code>$ccope</code> émetteur et peut être intercepté par chacun d'entre eux.</p>
+                        <p>L'<code>event</code> descend chaque branche de la hiérarchie des <code>scopes</code> en partant du <code>scope</code> émetteur et peut être intercepté par chacun d'entre eux.</p>
                         
                         <pre><code>$scope.$broadcast('player.events.playVideo', video)</code></pre>
                         
@@ -327,7 +327,7 @@ app.controller('ChildController', function($scope) {
                     <section>
                     	<p>Angular aussi utilise des events:</p>
                     	
-                    	<pre><code>app.controller('playerCtrl', function($scope) {
+                    	<pre><code>app.controller('PlayerCtrl', function($scope) {
   $scope.$on('$destroy', function(event) {
     // controlleur sur le point d'être détruit, dernière volonté?
   });
@@ -405,10 +405,10 @@ app.controller('ChildController', function($scope) {
                         
                     <section>
                         <ul>
-                            <li>directives natives commencent par ng- (conventions)</li>
-                            <li>bien de mettre son prefix (conventions)</li>
-                            <li>avec des tirets dans l'HTML (ng-click) et en camelCase en JS (ngClick)</li>
-                            <li>possibilité de écrire sous différentes formes dans l'HTML:</li>
+                            <li>Directives natives commencent par ng- (conventions).</li>
+                            <li>Mettre son prefix (conventions).</li>
+                            <li>Nommage avec des tirets dans l'HTML (ng-click) et en camelCase en JS (ngClick).</li>
+                            <li>Possibilité de écrire sous différentes formes dans l'HTML:</li>
                         </ul>
                         
                         <pre><code>
@@ -458,8 +458,8 @@ app.controller('ChildController', function($scope) {
                             <li>Permet un découpage de l'application.</li>
                             <li class="fragment">Découpage par fonctionnalité préconisé.</li>
                             <li class="fragment">Ne sert pas de namespace.</li>
-                            <li class="fragment">Le framework lui-même découpé en modules: <code>ngRoute</code>, <code>ngAnimate</code>, <code>ngMock</code>,..</li>
-                            <li class="fragment">Tous instanciés au démarrage (pas de lazy loading)</li>
+                            <li class="fragment">Le framework lui-même découpé en modules: <code>ngRoute</code>, <code>ngAnimate</code>, <code>ngSanitize</code>, <code>ngMock</code>,..</li>
+                            <li class="fragment">Tous instanciés au démarrage (pas de lazy loading).</li>
                         </ul>
                     </section>
                     
@@ -483,7 +483,7 @@ app.controller('ChildController', function($scope) {
                     </section>
                     
                     <section>
-                        <p>Tous les controlleurs, directives, filters et services sont déclarées sur un module.</p>
+                        <p>Tous les <code>controlleurs</code>, <code>directives</code>, <code>filters</code> et <code>services</code> sont déclarés sur un module.</p>
                         <img data-src="images/module-diagram.jpg" style="transform: scale(.8);"/>
                         <a href="http://www.manning.com/aden/" target="_blank" class="credits-link">http://www.manning.com/aden/</a>
                         
@@ -505,8 +505,8 @@ angular.module('myapp.utils').filter('myFilter', function() {});</code></pre>
                         
                         <ul>
                             <li>Exécution des <code>config()</code> puis des <code>run()</code>.</li>
-                            <li>On peut affecter autant de <code>config()</code> et de <code>run()</code></li>
-                            <li>Exécuté avant tous les controlleurs, directives, filtres,..</li>
+                            <li>On peut affecter autant de <code>config()</code> et de <code>run()</code>.</li>
+                            <li>Exécuté avant tous les <code>controllers</code>, <code>directives</code>, <code>filtres</code>,..</li>
                         </ul>
                         
                         <pre><code>angular.module('myapp', []);
@@ -540,10 +540,10 @@ angular.module('myapp').run(function($http) {
                             <li>Un service = simple objet JS avec propriétés et méthodes.</li>
                             <li>Utilise l'injection de dépendances.</li>
                             <li>Créé une seule fois lors du premier appel (Singleton).</li>
-                            <li>Réutilisé lors des suivants pour toute la durée de vie de la SPA.</li>
+                            <li>Réutilisé lors des appels suivants pour toute la durée de vie de la SPA.</li>
                             <li>Accessible de partout quelque soit le module sur lequel ils sont créés ou appelés.</li>
                             <li>Peut être injecté dans <code>controllers</code>, <code>filtres</code>, <code>services</code>,..</li>
-                            <li>Utilisation à volonté pour alléger au maximum les controlleurs.</li>
+                            <li>Utilisation à volonté pour alléger au maximum les <code>controllers</code>.</li>
                         </ul>
                     </section>
                     
@@ -608,7 +608,7 @@ app.controller('AppCtrl', function($scope, VideoData) {
                     </section>
                     
                     <section>
-                    <h2>Exemple de déclaration de services:</h2>
+                    <h2>Exemple de déclaration de services</h2>
                     
 <pre><code>playerApp.value('Params', {
   URL_API: 'https://api.dailymotion.com/videos',
@@ -653,7 +653,7 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                         
                         
                     <section>
-                        <p>Exemple d'utilisation de services:</p>
+                        <h2>Exemple d'utilisation de services</h2>
                         
 <pre><code>playerApp.controller('VideoPlayerModalCtrl', function($scope, $modalInstance, Dailymotion, video) {
   $scope.video = video;
@@ -667,17 +667,19 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                         
                         
                     <section>
-                        <h2>Services fournis par AngularJS</h2>
+                        <h2>Services fournis par Angular</h2>
                         
-                        <p><code>$http</code>, <code>$location</code>, <code>$filter</code>, <code>$window</code>, <code>$timeout</code>, <code>$interval</code>, <code>$animate</code>, <code>$rootScope</code>, <code>$document</code>,..</p>
                         
                         <ul>
-                            <li>Commencent tous par $ (conventions).</li><br>
-                            <li>Couche d'abstraction utile pour fonctionner dans l'écosystéme AngularJs et pour être mockée lors des tests.</li><br>
-                            <li><code>Providers</code> associés pour les configurer au démarrage:</li>
+                            <li>Couche d'abstraction utile pour fonctionner dans l'écosystéme AngularJs et pour être mocké lors des tests.</li><br>
+                            <li>Commencent tous par $ (conventions):<br>
+                        	<code>$http</code>, <code>$location</code>, <code>$filter</code>, <code>$window</code>, <code>$timeout</code>, <code>$interval</code>, <code>$animate</code>, <code>$rootScope</code>, <code>$document</code>,..
+                            </li><br>
+                            <li><code>Providers</code> associés pour les configurer au démarrage:<br>
+                        	<code>$httpProvider</code>, <code>$locationProvider</code>, <code>$filterProvider</code>, <code>$animateProvider</code>,..
+                            </li>
                         </ul>
                         
-                        <p>$httpProvider, $locationProvider, $filterProvider, $animateProvider, $rootScopeProvider,..</p>
                         
                     </section>
                         
@@ -694,32 +696,31 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                     <section>
                         <ul>
                             <li>Fonction qui transforme un input en output.</li>
-                            <li>Utilisation similaires à Twig.</li>
-                            <li>Stateless = si la données à transformer ne change pas, le filtre ne sera pas réexeutée.</li>
+                            <li>Utilisation similaire à Twig.</li>
+                            <li>Stateless = Si la donnée à transformer ne change pas, le filtre ne sera pas réexeuté.</li>
                             <li>Utilisation en HTML ou en JS.</li>
                     </section>
                         
                     <section>
-                        <h2>Création d'un filtre:</h2>
+                        <h2>Création d'un filtre</h2>
                         <pre><code>app.filter('truncate', function() {
   return function(str, nbChar) {
     return str.substring(0, nbChar);
   };
-});
-                        </code></pre>
+});</code></pre>
                     </section>
                         
                     <section>
-                        <h2>Utilisation HTML d'un filtre:</h2>
+                        <h2>Utilisation HTML d'un filtre</h2>
                         <pre><code><p>{{ description | truncate:10 }}</p>
 <p ng-bind="description | truncate:10"></p></code></pre>
-
+						<br>
                         <p>Possibilité de les cumuler:</p>
                         <pre><code><p>{{ data | filterA:param1 | filterB | filterC:param1:param2 }}</p></code></pre>
                     </section>
                         
                     <section>
-                        <h2>Utilisation JS d'un filtre:</h2>
+                        <h2>Utilisation JS d'un filtre</h2>
                         <pre><code>app.controller('MainCtrl', function($scope, $filter) {
   var longText = 'Trés long texte, trés long texte, trés long texte';
   
@@ -766,8 +767,8 @@ playerApp.factory('Dailymotion', function($http, $sce, Params) {
                     
                     <section>
                         <ul>
-                            <li>Promise = objet JS correspondant au résultat différé d'une opération asynchrone.</li>
-                            <li>Trés utilisée dans l'écosystéme AngularJS.</li>
+                            <li>Promise = Objet JS correspondant au résultat différé d'une opération asynchrone.</li>
+                            <li>Trés utilisé dans l'écosystéme AngularJS.</li>
                             <li>Plus souple que les callbacks.</li>
                             <li>Possibilité des les imbriquer.</li>
                             <li>Gestion des erreurs.</li>
@@ -856,15 +857,16 @@ app.controller('GreetController', function($scope, MaPromesse) {
                     </section>
                     
                     <section>
-                        <h2>Comment ça se passe?</h2>
+                        <h2>Comment ça se passe</h2>
                         
                         <ul>
-                        	<li>Grâce au pouvoir des directives, tous les éléments HTML du formulaire sont 'étendus' pa Angular:<br>
+                        	<li>Grâce au pouvoir des <code>directives</code>, tous les éléments HTML du formulaire sont 'étendus' par Angular:<br>
                         	<code>form</code>, <code>input</code>, <code>button</code>,..</li>
                         	<li>Ainsi que tous les attributs de validation HTML5:<br>
-                        	<code>required</code>, <code>min="4"</code>,..</li>
-                        	<li>En bonus, Angular ajoute des directives de validation: <code>ng-pattern="/^[a-zA-Z]+$/"</code>, <code>ng-maxlength=20</code>,..</li>
-                            <li>En méga bonus, vous pouvez créer vos propres directives de validation, y compris asynchrones!</li>
+                        	<code>required</code>, <code>min="4"</code>, <code>type="email"</code>,..</li>
+                        	<li>Et Angular ajoute des <code>directives</code> de validation:<br>
+                        	<code>ng-maxlength="20"</code>, <code>ng-pattern="/^[a-zA-Z]+$/"</code>,..</li>
+                            <li>En bonus, vous pouvez créer vos propres <code>directives</code> de validation, y compris asynchrones!</li>
                         </ul>
                     </section>
                     
@@ -904,7 +906,7 @@ app.controller('GreetController', function($scope, MaPromesse) {
                         	<li><code>$pristine</code>: Champ ou formulaire pas encore modifié.<br></li>
                         	<li><code>$valid</code>: Champ ou formulaire valide.</li>
                         	<li><code>$invalid</code>: Champ ou formulaire invalide.</li>
-                        	<li><code>$error</code>: Erreurs courante du champ ou formulaire.</li>
+                        	<li><code>$error</code>: Erreur courante du champ ou formulaire.</li>
                         </ul>
                         
                     	<pre><code>$scope.registerForm.$valid; /* true si formulaire valide */
@@ -916,7 +918,7 @@ $scope.registerForm.courriel.$error.email; /* true si validation email du champ 
                     </section>
                     
                     <section>
-                        <p>Affichage des erreurs</p>
+                        <h2>Affichage des erreurs</h2>
                         
                     	<pre><code><form name="registerForm" ng-submit="createUser(newUser)" novalidate>
   
@@ -954,7 +956,7 @@ $scope.registerForm.courriel.$error.email; /* true si validation email du champ 
                     </section>
                     
                     <section>
-                    	<p>Encore mieux, le module ngMessages</p>
+                    	<p>Encore mieux, le module <code>ngMessages</code></p>
                     	
                     	<pre><code><script src="https://code.angularjs.org/1.3.14/angular-messages.js"></script></code></pre>
                     	
@@ -1034,10 +1036,10 @@ form input {
                     </section>
                     
                     <section>
-                    	<h2>Différentes options possibles:</h2>
+                    	<h2>Différentes options possibles</h2>
                     	
                         <ul>
-                            <li>Module <code>ngRoute</code>: Basé sur les routes (#/posts/12), trés basique, pas de vue imbriquées, plus mis à jour.</li><br>
+                            <li>Module <code>ngRoute</code>: Basé sur les routes (#/posts/12), trés basique, pas de vues imbriquées, plus mis à jour.</li><br>
                             <li>Module <code>uiRouter</code>: Basé sur les states ('app.posts.details'), librairie remplaçante, beaucoup plus souple.</li><br>
                             <li>Module <code>ngNewRouter</code> Nouveau router qui arrive avec la version 1.4 et sera aussi utilisé dans Angular 2.</li>
                         </ul>
@@ -1170,7 +1172,7 @@ form input {
                     	<h2>ngNewRouter</h2>
                     	
                         <ul>
-                            <li>Trés trés récent et encore en version béta.</li><br>
+                            <li>Trés récent et encore en version béta.</li><br>
                             <li>Basé sur le principe des composants trés puissant.</li><br>
                             <li>Va être un élément clé pour la migration vers Angular 2.</li><br>
                         </ul>
@@ -1190,6 +1192,7 @@ form input {
 	                        <li>Découplées et réutilisables.</li>
 	                        <li>Animations CSS (transitions & keyframes) et JS supportées.</li>
 	                        <li>Utilisation du module <code>ngAnimate</code>.</li>
+	                        <li>Fonctionne uniquement avec une <code>class</code>.</li>
                     	</ul>
                     </section>
                     
@@ -1228,9 +1231,9 @@ form input {
                         <h2>animations JS</h2>
                         
                         <ul>
-	                        <li>Utilisation de librairie externe: <a href="http://api.jquery.com/animate/" target="_blank">jQuery</a>, <a href="http://greensock.com/" target="_blank">Greensock</a>, <a href="http://lvivski.com/anima/" target="_blank">Anima</a></li>
+	                        <li>Utilisation de librairies externes:<br><a href="http://api.jquery.com/animate/" target="_blank">jQuery</a>, <a href="http://greensock.com/" target="_blank">Greensock</a>, <a href="http://lvivski.com/anima/" target="_blank">Anima</a></li>
 	                        <li>Permet des animations complexes (<a href="http://plnkr.co/edit/pu8fMG?p=preview" target="_blank">exemple</a>).</li>
-	                        <li>Utile pour supports mobiles.</li>
+	                        <li>Utile pour performances sur supports mobiles.</li>
                         </ul>
                     </section>
                     
@@ -1278,15 +1281,15 @@ form input {
                     </section>
                     
                     <section>
-                    	<h2>Angular a été pensé pour les tests</h2>
+                    	<h2>pensé pour les tests</h2>
                     	
                     	<p>Tout est testable:<br>
-                    	<code>Controller</code>, <code>Services</code>, <code>Directives</code>, <code>Filter</code>,...<br>
-                    	et l'application dans sa globalité!</p>
+                    	<code>Controllers</code>, <code>Services</code>, <code>Directives</code>, <code>Filters</code>,...<br><br>
+                    	ainsi que l'application dans sa globalité!</p>
                     </section>
                     
                     <section>
-                 		<h2>Deux types de tests:</h2>
+                 		<h2>Deux types de tests</h2>
                     	
                     	<ul>
                     		<li>les tests unitaires.</li>
@@ -1297,14 +1300,12 @@ form input {
                     <section>
                     	<h2>Tests unitaires</h2>
                         
-                        <p>L'application est composé de modules, eux-même composés de <code>Controller</code>, <code>Services</code>, <code>Directives</code>, <code>Filter</code>.</p>
-                        <p>Toutes ces briques communiquent entre elles par le biais d'une API publique et se comportent comme des boites noires.</p>
+                        <p>L'application est composé de modules, eux-mêmes composés de <code>controllers</code>, <code>services</code>, <code>directives</code>, <code>filters</code>,..</p>
+                        <p>Toutes ces briques communiquent entre elles par le biais d'une API publique et se comportent comme des "boites noires".</p>
                         <p>Les tests unitaires vérifient ces API publiques.</p>
                     </section>
                     
                     <section>
-						<p>Possibilité de faire du TDD.</p>
-                    	
                     	<p>Les outils:</p>
                     	
                     	<ul>
@@ -1313,10 +1314,12 @@ form input {
 							<li><code>ngMock</code>: Utilitaires et services spécial tests unitaires.</li>
 							<li><code>$httpBackend</code>: Service pour simuler <code>$http</code>.</li>
                     	</ul>
+                    	
+						<p>Possibilité de faire du TDD.</p>
                     </section>
                     
                     <section>
-                    	<p>Tests d'un controlleur:</p>
+                    	<p>Test d'un <code>controller</code>:</p>
                     	
                     	<pre><code>angular.module('monApp').controller('DashboardCtrl', function ($scope) {
   $scope.score = 456585;
@@ -1346,18 +1349,17 @@ form input {
                   
                     	<ul>
                     		<li>Famework dédié à AngularJS utilisant Node.js.</li>
-                    		<li>Choix des OS/navigateurs sur lesquel exécuter les tests.</li>
-                    		<li>Intéragi avec l'application comme un vrai utilisateur.</li>
+                    		<li>Choix des OS/navigateurs sur lesquels exécuter les tests.</li>
+                    		<li>Intéragit avec l'application comme un vrai utilisateur.</li>
                     		<li>Possibilité de faire tourner les tests avec une tâche Grunt.</li>
                     		<li>Fichiers à l'extension <code>.e2e.js</code>.</li>
-                    		<li>Combine outils puissants: <code>Selenium</code>, <code>webDriver</code>, <code>Jasmine</code>..</li>
+                    		<li>Combine des outils puissants: <code>Selenium</code>, <code>webDriver</code>, <code>Jasmine</code>..</li>
                     		<li>Peut tourner avec <code>PhantomJS</code> (headless browser).</li>
                     	</ul>
                     </section>
                     
                     <section>
                     	<pre><code>// todo-spec.js
-
 describe('angularjs homepage todo list', function() {
   it('should add a todo', function() {
     browser.get('http://www.angularjs.org');
@@ -1371,13 +1373,11 @@ describe('angularjs homepage todo list', function() {
   });
 });</code></pre>
                     	<pre><code>// conf.js
-
 exports.config = {
   seleniumAddress: 'http://localhost:4444/wd/hub',
   specs: ['todo-spec.js']
 };</code></pre>
                     	<pre><code>// ligne de commande
-                    	
 protractor conf.js</code></pre>
 
 						<p>Chrome s'ouvre,  interactions, puis se ferme rapidement.</p>
