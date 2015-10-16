@@ -4,6 +4,7 @@
 - [Formation AngularJS - Découverte du framework](http://bertrandg.github.io/slides/angular-decouverte/#/)
 - [Formation AngularJS - Framework en profondeur + outils](http://bertrandg.github.io/slides/angular-profondeur/#/)
 - [Formation AngularJS - Directives](http://bertrandg.github.io/slides/angular-directives/#/)
+- [Formation AngularJS - Angular2 - ES6 - Typescript](http://bertrandg.github.io/slides/angular2-direction/#/)
 
 
 # exercices
