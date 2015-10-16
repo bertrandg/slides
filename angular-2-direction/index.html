@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Formation AngularJS - Angular2 - ES6 - Typescript</title>
+
+        <meta name="description" content="Formation AngularJS - Angular2 - ES6 - Typescript">
+        <meta name="author" content="Bertrand Gaillard">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/beige.css" id="theme">
+
+        <!-- Code syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <style>
+            .reveal pre code {
+                //max-height: 500px;
+            }
+            .reveal blockquote {
+                width: 90%;
+            }
+            .reveal pre {
+                font-size: .45em;
+            }
+            .reveal p > code,
+            .reveal blockquote > code,
+            .reveal li > code {
+                color: #8b743d;
+            }
+            .reveal .credits-link {
+                font-size: .35em;
+                display: block;
+            }
+        </style>
+
+    	<a href="http://www.sapiens-rwd.fr/" target="_blank" style="display: block; position: absolute; bottom: 10px; left: 10px; z-index: 1000;">
+			<div style="background: url('images/rwd.png'); width: 110px; height: 110px; transform: scale(.7);" alt="Sapiens RWD"></div>
+        </a>
+        
+        <div class="reveal">
+
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+                
+              	<section>
+                    <h1>Formation AngularJS</h1>
+                    <h2>ES6 - Typescript - Angular2</h2>
+                    <small><a target="_blank" href="http://bertrandg.github.io/">Bertrand GAILLARD</a>
+                    <br><a target="_blank" href="http://www.sapiens-rwd.fr/">Sapiens RWD</a> - <a target="_blank" href="http://twitter.com/SapiensRWD">@SapiensRWD</a></small>
+                </section>
+                
+                <section>
+                    
+                    <section>
+                        <h2>ES6</h2>
+                        <p>[ou ES2015]</p>
+                    </section>
+
+                    <section>
+                        <h3>let</h3>
+                        <pre><code>function getPonyFullName(pony) {
+  if (pony.isChampion) {
+    let name = 'Champion ' + pony.name;
+    return name;
+  }
+  // name is not accessible here
+  return pony.name;
+}</code></pre>
+                    </section>
+
+                    <section>
+                        <h3>constant</h3>
+                        <pre><code>const PONIES_IN_RACE = 6;
+PONIES_IN_RACE = 7; // SyntaxError
+
+const PONY = { };
+PONY.color = 'blue'; // works
+
+const PONY = { };
+PONY = {color: 'blue'}; // SyntaxError
+
+const PONIES = [];
+PONIES.push({ color: 'blue' }); // works
+PONIES = []; // SyntaxError</code></pre>
+                    </section>
+
+                    <section>
+                        <h3>[ les types en javascript ]</h3>
+                        <p>6 types primitifs:</p>
+                        <ul>
+                            <li><code>Boolean</code> (booléen)</li>
+                            <li><code>Number</code> (nombre)</li>
+                            <li><code>String</code> (chaine de caractères)</li>
+                            <li><code>Symbol</code> (symbole - nouveauté ES6)</li>
+                            <li><code>null</code></li>
+                            <li><code>undefined</code></li>
+                        </ul>
+                        <p>Et le type <code>Object</code> (<code>function</code>, <code>RegExp</code>, <code>{}</code>)</p>
+                    </section>
+
+                    <section>
+                        <h3>arrow function</h3>
+                        <pre><code>var numbers = [1,2,3,4,5];
+var timesTwo = numbers.map(function (number) {
+  return number * 2;
+});
+console.log(timesTwo); // [2, 4, 6, 8, 10]
+
+//
+
+var numbers = [1,2,3,4,5];
+var timesTwo = numbers.map((number) => number * 2);
+console.log(timesTwo); // [2, 4, 6, 8, 10]
+
+//
+
+function FooCtrl (FooService) {
+  this.foo = 'Hello';
+  FooService.doSomething((response) => this.foo = response);
+}</code></pre>
+                    </section>
+
+                    <section>
+                        <h3>template</h3>
+                        <p>Utilisation du backtick (<code>Alt + 7</code>)</p>
+                        <ul>
+                            <li>Permet le multiligne sans les <code>+</code></li>
+                            <li>Permet d'insérer des variables du scope courant</li>
+                        </ul>
+                        <pre><code>function sayHiTo(firstname, lastname) {
+    return `<h1>
+        Hi ${firstname} ${lastname}, how are you today?
+    </h1>`;
+}</code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Paramétre par défaut</h3>
+                        <pre><code>function setBackgroundColor(element, couleur) {
+  couleur = couleur || 'geen';
+  element.style.backgroundColor = couleur;
+}
+
+function setBackgroundColor(element, couleur = 'green') {
+  element.style.backgroundColor = couleur;
+}
+
+setBackgroundColor(unDiv);            // la couleur sera 'green'
+setBackgroundColor(unDiv, undefined); // la couleur sera 'green'
+setBackgroundColor(unDiv, 'blue');    // la couleur sera 'blue'</code></pre>
+                    </section>
+
+                    <section>
+                        <h3>class</h3>
+                        <pre><code>class Animal {
+  constructor(size) {
+    this.size = size;
+  }
+    
+  age() {
+    return 10;
+  }
+}
+
+class Pony extends Animal {
+  static defaultSpeed() {
+    return 10;
+  }
+  
+  constructor(color = 'green') {
+    super(4);
+    this._color = color;
+  }
+  
+  age() {
+    return super.age() + 10;
+  }
+  
+  get color() {
+    console.log('get color');
+    return this._color;
+  }
+  set color(newColor) {
+    console.log(`set color ${newColor}`);
+    this._color = newColor;
+  }
+}
+
+let speed = Pony.defaultSpeed();
+
+let pony = new Pony();
+pony.color = 'red'; // set color red
+console.log(pony.color); // get color</code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Destructuring assignment</h3>
+                        <pre><code>var {a, b} = {a: 1, b: 2};
+
+var [a, b] = [1, 2];
+
+var a = 1;
+var b = 3;
+[a, b] = [b, a];
+
+var o = {p: 42, q: true};
+var {p, q} = o;
+console.log(p); // 42
+console.log(q); // true
+
+//
+
+var metadata = {
+    title: "Scratchpad",
+    translations: [
+       {
+        locale: "de",
+        localization_tags: [ ],
+        last_edit: "2014-04-14T08:43:37",
+        url: "/de/docs/Tools/Scratchpad",
+        title: "JavaScript-Umgebung"
+       }
+    ],
+    url: "/en-US/docs/Tools/Scratchpad"
+};
+
+var { title: englishTitle, translations: [{ title: localeTitle }] } = metadata;
+
+console.log(englishTitle); // "Scratchpad"
+console.log(localeTitle);  // "JavaScript-Umgebung"</code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Rest operator (...)</h3>
+                        <pre><code>let tab = ['a', 'b', 'c'];
+function f(param1, param2, param3) {
+  // a b c
+}
+f(...tab);
+
+//
+
+let tab2 = [...tab, 'd', 'e'];
+
+//
+
+function fun1(...theArgs) {
+  console.log(theArgs.length);
+}
+fun1();  // 0
+fun1(5); // 1
+fun1(5, 6, 7); // 3
+</code></pre>
+                    </section>
+
+                    <section>
+                        <h3>module / namespace</h3>
+                        <pre><code>//------ common/lib.js ------
+
+export const sqrt = Math.sqrt;
+
+export function square(x) {
+    return x * x;
+}
+
+export function diag(x, y) {
+    return sqrt(square(x) + square(y));
+}
+
+
+//------ main.js ------
+
+import { square, diag } from 'common/lib';
+
+console.log(square(11)); // 121
+console.log(diag(4, 3)); // 5</code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Exercice</h2>
+                        <p><a href="http://tagtree.io/courses/expert-es6/" target="_blank">http://tagtree.io/courses/expert-es6/</a></p>
+                        <p>Pour aller plus loin:<br><a href="http://es6katas.org/" target="_blank">http://es6katas.org/</a></p>
+                    </section>
+
+                    <section>
+                        <h2>Transpiler</h2>
+                        <ul>
+                            <li>Conversion en <code>ES5</code></li>
+                            <li>Uniquement du sucre syntaxique</li>
+                            <li>Babel ou Traceur</li>
+                            <li>Fonctionne seul avec <code>NodeJS</code> ou bien avec des tâches <code>Grunt</code>/<code>Gulp</code>/<code>Brunch</code>/...</li>
+                            <li>Utilisation de fichiers sourcemap pour débugger</li>
+                        </ul>
+                        <br><br>
+                        <img data-src="images/babel.png" style="width: auto; max-height: 150px;" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <img data-src="images/traceur.svg" style="width: auto; height: 150px;" />
+                    </section>
+
+                    <section>
+                        <h2>Systéme de modules ES6</h2>
+                    </section>
+
+                    <section>
+                        <h3>Avantages</h3>
+                        <p>Permet de mieux structurer son application</p>
+                        <p>Evite des conflits grâce aux namespaces:</p>
+                        <pre><code>import { double } from 'common/mymodule';
+import { double as doubleAlias } from 'company/utils/library';
+
+double();
+doubleAlias();</code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Inconvénients</h3>
+                        <p>Ne fonctionne pas dans les navigateurs actuels (car ES5)</p>
+                        <p>De (trop?) nombreux outils, librairies et standards :</p>
+                        <p><code>CommonJS</code>, <code>RequireJS</code>, <code>AMD</code>, <code>Browserify</code>, <code>SystemJS</code>, <code>Webpack</code>,... WTF!</p>
+                    </section>
+
+                    <section>
+                        <h3>Explications 1/2</h3>
+                        <p><code>CommonJS</code> et <code>AMD</code> sont des "normes d'écriture" ES5 de modules.</p>
+                        <p><code>CommonJS</code> (synchrone) est populaire avec <code>NodeJS.</code></p>
+                        <p><code>AMD</code> (asynchrone) est plus populaire sur navigateurs.</p>
+                    </section>
+
+                    <section>
+                        <h3>Explications 2/2</h3>
+                        <ul>
+                            <li><code>RequireJS</code> est un loader de modules <code>AMD.</code></li>
+                            <li><code>Browserify</code> est un loader de modules <code>CommonJS</code>. (utile pour faire tourner du code <code>NodeJS</code> sur le navigateur. cf: accès à toutes les lib dispo via npm)</li>
+                            <li><code>SystemJS</code> est un loader universel de modules <code>ES6</code> / <code>CommonJS</code> / <code>AMD</code>.</li>
+                            <li><code>Webpack</code> est un loader universel de modules <code>ES6</code> / <code>CommonJS</code> / <code>AMD</code>. Il fait également pleins d'autres choses qui remplacent <code>Grunt</code>/<code>Gulp</code>.</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <img data-src="images/js-modules.png" />
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Typescript</h1>
+                    </section>
+
+                    <section>
+                        <p>Transpiler égamelent comme Babel/Traceur</p>
+                        <p>Dispose des nouveautés ES6</p>
+                        <p>Dispose de certaines nouveautés ES7 (Decorator)</p>
+                        <p>Ajoute possibilité (Facultatif) de typer tous les objets</p>
+                    </section>
+
+                    <section>
+                        <p>Utilisation des types et ES6/ES7 optionnelle</p>
+                        <p>Code ES5 actuel 100% compatible</p>
+                        <p>Permet autocomplete et affichage des erreurs dans l'IDE/console avant l'exécution</p>
+                        <p>Gain de temps et de robustesse</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Angular2</h1>
+                        <p>(alpha 42)</p>
+                    </section>
+
+                    <section>
+                        <p>API non définitive</p>
+                        <p>Ne pas utiliser pour projets en PROD</p>
+                        <p>Assez avancé pour s'amuser avec et découvrir</p>
+                    </section>
+                </section>
+            </div>
+
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+
+            // Full list of configuration options available at:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                //width: 1200,
+                //height: 900,
+                
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+
+                transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+                // Optional reveal.js plugins
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true },
+                    { src: 'plugin/notes/notes.js', async: true }
+                ]
+            });
+
+        </script>
+
+    </body>
+</html>
