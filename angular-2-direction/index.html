@@ -369,35 +369,334 @@ doubleAlias();</code></pre>
                     </section>
 
                     <section>
-                        <p>Transpiler égamelent comme Babel/Traceur</p>
+                        <p>Transpiler également comme Babel/Traceur</p>
                         <p>Dispose des nouveautés ES6</p>
                         <p>Dispose de certaines nouveautés ES7 (Decorator)</p>
-                        <p>Ajoute possibilité (Facultatif) de typer tous les objets</p>
                     </section>
 
                     <section>
-                        <p>Utilisation des types et ES6/ES7 optionnelle</p>
-                        <p>Code ES5 actuel 100% compatible</p>
-                        <p>Permet autocomplete et affichage des erreurs dans l'IDE/console avant l'exécution</p>
-                        <p>Gain de temps et de robustesse</p>
+                        <h2>Typage facultatif de tous les objets</h2>
+                        <pre><code>class Movie {
+    name:string
+    year:number
+    score:number
+    
+    constructor(name:string, year:number, score:number) {
+        this.name = name;
+        this.year = year;
+        this.score = score;
+    }
+}
+
+function show(m: Movie, type) {
+    console.log(m, type);
+}
+
+show('ff', 44); // transpilation error
+show(new Movie('Snatch', 1999, 4.2), 'sx') // no error</code></pre>
+                    </section>
+
+                    <section>
+                        
+                        <pre><code>class Movie {    
+    constructor(public name:string, public year:number, private score:number) {}
+}
+
+function show(m: Movie) {
+    console.log(m);
+}
+
+show('ff'); // transpilation error
+
+let m:Movie = new Movie('Snatch', 1999, 4.2);
+show(m) // no error
+
+console.log(m.name);
+console.log(m.year);
+console.log(m.score); // transpilation error</code></pre>
+
+                        <p>L'accès à une propriété <code>private</code> d'un objet lévera une erreur à la transpilation mais pas à l'éxécution.</p>
+                    </section>
+
+                    <section>
+                        <ul>
+                            <li>Utilisation des types et ES6/ES7 optionnelle.</li>
+                            <li>Code ES5 actuel 100% compatible.</li>
+                            <li>Autocomplete dans l'IDE.</li>
+                            <li>Erreurs dans la console au moment de la transpilation.</li>
+                            <li>Léve des erreurs avec l'exécution dans le navigateur.</li>
+                            <li>Gain de temps et de robustesse.</li>
+                        </ul>
+                        <br><br>
+                        <blockquote>Les erreurs levées par Typescript sont 'informatives', le JS est quand même généré et l'on peut l'utiliser (à nos risques et périls)!</blockquote>
                     </section>
                 </section>
 
                 <section>
                     <section>
                         <h1>Angular2</h1>
-                        <p>(alpha 42)</p>
+                        <p>(alpha 44)</p>
                     </section>
 
                     <section>
-                        <p>API non définitive</p>
-                        <p>Ne pas utiliser pour projets en PROD</p>
-                        <p>Assez avancé pour s'amuser avec et découvrir</p>
+                        <ul>
+                            <li>API non définitive.</li>
+                            <li>Ne pas utiliser pour projets en Prod.</li>
+                            <li>Assez avancé pour s'amuser avec et découvrir.</li>
+                            <li>Une première Beta devrait arriver trés vite.</li>
+                        </ul>
                     </section>
 
                     <section>
-                        <p>Ecrit en Typescript</p>
-                        <p>Utilisable en ES5 / ES6 / Typescript</p>
+                        <ul>
+                            <li>Réecriture totale du framework.</li>
+                            <li>Ecrit en Typescript.</li>
+                            <li>Utilisable en ES5 / ES6 / Typescript</li>
+                            <li>Gain de performance énorme.</li>
+                            <li>Meilleure compatibilité avec les standards actuels/futurs du Web.</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <p>Compatible avec spécifications des Web Components</p>
+                        <ul>
+                            <li>Custom elements</li>
+                            <li>Templates</li>
+                            <li>Imports</li>
+                            <li>Shadow DOM</li>
+                        </ul>
+                        <br><br>
+                        <a href="https://developer.mozilla.org/fr/docs/Web/Web_Components">https://developer.mozilla.org/fr/docs/Web/Web_Components</a>
+                    </section>
+
+                    <section>
+                        <p>Séparation entre <code>Application layer</code> et <code>Render layer</code>:</p>
+                        <ul>
+                            <li>
+                                Rendu coté serveur (app isomorphique / JS universel):
+                                <ul>
+                                    <li>Meilleur temps de chargement.</li>
+                                    <li>SEO</li>
+                                    <li>Partage de liens Facebook/Twitter/..</li>
+                                </ul><br>
+                            </li>
+                            <li>
+                                Utilisation des Web Workers sur les navigateurs:
+                                <ul>
+                                    <li>Evite de bloquer l'interface lors d'opérations lourdes</li>
+                                </ul><br>
+                            </li>
+                            <li>Utilisation de <code>Render layer</code> différent pour applications mobile natives par exemple</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <p>De nombreux disparus..</p>
+                        <img src="images/ng2-rip.png" style="max-width: 500px;" />
+                    </section>
+
+                    <section>
+                        <h2>Pour le meilleur !</h2>
+                    </section>
+
+                    <section>
+                        <ul>
+                            <li>Tout est composant.</li>
+                            <li>Application représentée par un arbre de composants.</li>
+                            <li>Utilisation de métadonnées pour configurer un composant.</li>
+                        </ul>
+                        <br><br>   
+                        <blockquote>En ng2, un composant est équivalent à une directive avec  un scope isolé en ng1.</blockquote>
+                    </section>
+                    
+                    <section>
+                        <h3>Un composant ng2 en Typescript</h3>
+                        <pre><code>import {Component, View} from 'angular2/angular2';
+
+@Component({
+    selector: 'my-app'
+})
+@View({
+    template: `<main>
+                 <h1> This is my first Angular2 app</h1>
+               </main>`
+})
+class MyAppComponent {
+    constructor() {
+        console.log('I am a component!');
+    }
+}</code></pre>
+
+<blockquote>Le nom du composant est différent de son selector.</blockquote>
+                    </section>
+
+                    <section>
+                        <h3>Un composant ng2 en ES5</h3>
+                        <pre><code>function MyAppComponent() {
+    console.log('I am a component!');
+}
+
+MyAppComponent.annotations = [
+    new angular.ComponentAnnotation({
+        selector: 'my-app'
+    }),
+    new angular.ViewAnnotation({
+        template: "<main>" + 
+                       "<h1> This is my first Angular2 app</h1>" +
+                  "</main>"
+    })
+];</code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Communication entre les composants</h2>
+
+                        <p>Un composant communique:</p>
+                        <ul>
+                            <li>avec ses enfants grâce aux <code>property binding</code>.</li>
+                            <li>et avec son parent grâce aux <code>event binding</code>.</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>property binding</h2>
+                        <pre><code><div [attr]="expression"></div></code></pre>
+                        <ul>
+                            <li>Accès à toutes les propriétés des éléments HTML.</li>
+<li>Possibilité de définir de nouvelles propriétés.</li>
+                        </ul>
+                        <br><br>
+                        <p>Syntaxe lternative:</p>
+                        <pre><code><div bind-attr="expression"></div></code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Examples 1/2</h3>
+
+                        <pre><code><h1>My First Angular2 app</h1>
+
+<h1>My First Angular {{ ngVersion }} app</h1>
+<h1 [textContent]="'My First Angular' + ngVersion + ' app'"></h1>
+
+<div [class.extra-sparkle]="isDelightful"></div>
+
+<div [style.backgroundColor]="designRules.color"></div>
+
+<div [attr.role]="myAriaRole"></div></code></pre>
+                    </section>
+
+                    <section>
+                        <br>
+                        <h3>Examples 2/2</h3>
+                        <p>Possibilité de définir de nouvelles propriétés</p>
+                        <pre><code><beer-item [beer]="'Maredsous'"></beer-item></code></pre>
+
+                        <pre><code>@Component({
+  selector: 'beer-item',
+  inputs: ['beer']
+})
+@View({
+  template: `<section>
+                <h2>{{beer}}</h2>
+                <button>Je veux celle-ci !</button>
+            </section>`
+})
+class BeerItem {
+    beer: String;
+}</code></pre>
+
+                        <a href="http://gillespie59.github.io/assets/slides/kaiznday/" target="_blank" class="credits-link">Example from gillespie59.github.io</a>
+                    </section>
+
+
+                    <section>
+                        <h2>event binding</h2>
+                        <pre><code><div (event)="expression"></div></code></pre>
+                        <ul>
+                            <li>Accès à tous les événements des éléments HTML.</li>
+                            <li>Possibilité de définir de nouveaux événements.</li>
+                        </ul>
+                        <br><br>
+                        <p>Syntaxe lternative:</p>
+                        <pre><code><div on-event="expression"></div></code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Examples 1/2</h3>                        
+
+                        <pre><code><input #myinput (change)="inputChanged(myinput.value)" />
+
+<button (click)="openModal()"></button>
+
+<div [style.backgroundColor]="myBgColor" (mouseover)="myBgColor = 'red'" (mouseout)="myBgColor = 'blue'"></div></code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Examples 2/2</h3>                        
+
+                        <pre><code><beerItem [beer]="'Maredsous'" (selectBeer)="sendToBeerTap()"></beerItem></code></pre>
+
+                        <pre><code>@Component({
+  selector: 'beerItem',
+  inputs: ['beer'],
+  outputs: ['selectBeer']
+})
+@View({
+  template: `<section>
+                <h2>{{beer<}}</h2>
+                <button (click)="selectItem()">Je veux celle-ci !</button>
+            </section>`
+})
+class BeerItem {
+  beer: String;
+  selectBeer: EventEmitter;
+  
+  selectItem() {
+     this.selectBeer.next(this.beer);
+  }
+}</code></pre>
+                    </section>
+
+
+                    <section>
+                        <h2>Disparition de 43 directives ng1!</h2>
+                    </section>
+
+                    <section>
+                        <p>Toutes les réécritures de propriétés/contenus d'éléments du DOM:</p>
+                        <ul>
+                            <li><code>ng-bind</code> -> <code>[textcontent]</code></li>
+                            <li><code>ng-src</code> -> <code>[src]</code></li>
+                            <li><code>ng-href</code> -> <code>[href]</code></li>
+                            <li><code>ng-style</code> -> <code>[style]</code></li>
+                            <li>...</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <p>Tous les évenements utilisateurs:</p>
+                        <ul>
+                            <li><code>ng-click</code> -> <code>(click)</code></li>
+                            <li><code>ng-change</code> -> <code>(change)</code></li>
+                            <li><code>ng-mouseover</code> -> <code>(mouseover)</code></li>
+                            <li><code>ng-blur</code> -> <code>(blur)</code></li>
+                            <li>...</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <p>Autres:</p>
+                        <ul>
+                            <li><code>ng-controller</code> -> n'existe plus, on créé des composants!</li>
+                            <li><code>ng-hide</code> -> <code>[hidden]</code></li>
+                        </ul>
+                    </section>
+
+
+                    <section>
+                        <h2>Les services</h2>
+                        <p>Simples classes ES6.</p>
+                        <p>Disparues les 5 manières différentes de déclarer un service avec ng1</p>
                     </section>
                 </section>
             </div>
